@@ -1,0 +1,20 @@
+
+
+.sidebar-admin {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  zIndex: 1000;
+  overflowY: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-toggle-icon {
+  color: #4a148c;
+  font-size: 1.5em;
+}
+
+

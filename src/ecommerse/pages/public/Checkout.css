@@ -1,0 +1,33 @@
+
+/* 1. Estilo visual del select cerrado */
+select.form-select {
+  background-color: white;
+  border: 1px solid #6c3483;
+  color: #6c3483;
+}
+
+/* 2. Estilo visual de las opciones */
+select.form-select option {
+  background-color: #6c3483;
+  color: white;
+}
+
+/* 3. Estilo al enfocar el select */
+select.form-select:focus {
+  border-color: #6c3483;
+  box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);
+}
+
+
+
+
+/* Personalización del checkbox y radio cuando están seleccionados */
+.form-check-input:checked {
+  background-color: #6c3483;
+  border-color: #6c3483;
+}
+
+/* Opcional: aplicar un borde general a los input radio y checkbox */
+.form-check-input {
+  border: 1px solid #6c3483;
+}

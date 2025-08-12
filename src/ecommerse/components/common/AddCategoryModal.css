@@ -1,0 +1,23 @@
+
+
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background-color: #fff !important;
+  border-radius: 0.75rem;
+  min-width: 320px;
+  max-width: 400px; /* ⬅️ Reducido de 500px a 400px */
+  width: 100%;
+}
