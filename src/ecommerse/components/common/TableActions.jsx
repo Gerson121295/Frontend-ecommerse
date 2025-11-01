@@ -14,5 +14,3 @@ const TableActions = () => {
 
 export default TableActions;
 
-
-

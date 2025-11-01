@@ -11,9 +11,9 @@ export const ProductCard = ({ product }) => {
             {product.name}
           </h5>
           <p className="card-text">
-            {product.oldPrice && (
+            {/* {product.oldPrice && (
               <del className="text-muted me-2">Q{product.oldPrice}</del>
-            )}
+            )} */}
             <strong>Q{product.price}</strong>
           </p>
           <button className="btn btn-sm btn-morado">

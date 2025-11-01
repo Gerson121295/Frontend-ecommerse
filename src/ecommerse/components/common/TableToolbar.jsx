@@ -1,6 +1,7 @@
+import { AddCategoryButton } from "./product/AddCategoryButton";
 
 
-const TableToolbar = ({ buttonLabel = "Add New", onButtonClick }) => {
+const TableToolbar = () => { //({ buttonLabel = "Add New", onButtonClick }) => { //version anterior recibe nombre Boton y func. onButtonClick por props
   return (
     <div className="d-flex justify-content-between align-items-center mb-3">
       <input
@@ -16,7 +17,10 @@ const TableToolbar = ({ buttonLabel = "Add New", onButtonClick }) => {
           <option>50</option>
         </select>
         <button className="btn contorno-campo-estatico me-2">Export</button>
-        <button className="btn btn-morado" onClick={onButtonClick} >+ {buttonLabel}</button>
+        {/* <button className="btn btn-morado" onClick={onButtonClick} >+ {buttonLabel}</button> */}
+        <AddCategoryButton 
+            buttonLabel="Agregar"
+        />
       </div>
     </div>
   );

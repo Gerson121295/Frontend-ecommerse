@@ -8,7 +8,9 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
 
     const [formValidation, setFormValidation] = useState({});
 
-    
+    //valida que el campo no haya sido tocado
+    const [touched, setTouched] = useState({});
+
     useEffect(() => {
       createValidators();
     }, [formState]) //se ejecuta createValidator cada vez que cambie formState(cualquier campo del form, botones, etc.)
@@ -45,6 +47,13 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
         });
     }
 
+    const onBlurField = ({ target }) => {
+        setTouched({
+        ...touched,
+        [target.name]: true,
+        });
+    };
+
     //Funcion para Reset o limpiar el form
     const onResetForm = () => { 
         /*setFormState ({ //forma 2 cuando queremos modificar algun campo del form.
@@ -52,6 +61,7 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
                 initialForm : {} //luego establecemos el objeto initalForm como vacio
         })*/
         setFormState(initialForm); //Forma 2: pasarle los valores iniciales initialForm que se recibe que son vacios al setFormState(que modifica el formState)
+        setTouched({}); //resetea los campos tocados
      }
 
      //Funcion de validacion de los campos
@@ -63,7 +73,9 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
             const [fn, errorMessage] = formValidations[formField];
 
             //fn ejecuta la funcion si la funcion se cumple ejecuta null pero si no : muestra erroMessage
-            formCheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null : errorMessage;
+        formCheckedValues[`${formField}Valid`] = fn(formState[formField], formState)
+            ? null
+            : errorMessage;
         }
         //cambia el valor de formValidation con setFormValidation estableciendo los valores de formCheckedValues
         setFormValidation(formCheckedValues);
@@ -76,8 +88,10 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
         ...formValidation, //esparce el objeto que tiene todas las propiedades de validacion
         isFormValid,
         formState,
+        touched,
         onInputChange,
         onResetForm,
+        onBlurField,
     }
 
 }

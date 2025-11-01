@@ -1,7 +1,15 @@
 
+import { FaEdit } from "react-icons/fa";
+import { DeleteCategoryButton } from "./product/DeleteCategoryButton";
 import TableActions from "./TableActions";
+import './../../../styles.css'; // Importa estilos globales
 
-const DataTable = ({ columns, data, type }) => {
+const DataTable = ({ columns, data, type, 
+                      onSelect, onDoubleClick,
+                      currentPage, totalPages, onPageChange,
+                      categorySelected 
+                  }) => {
+
   const renderRowByType = (item) => {
     if (type === "product") {
       return (
@@ -87,28 +95,32 @@ const DataTable = ({ columns, data, type }) => {
     if (type === "category") {
   return (
     <>
-      <td>
+ {/*      <td>
         <div className="d-flex align-items-center">
           <img
             src={item.icon}
-            alt={item.name}
+            alt={item.nombreCategoria}
             className="rounded me-2"
             width={40}
             height={40}
           />
-          <div>
-            <div className="fw-bold">{item.name}</div>
-            <small className="text-muted">{item.description}</small>
-          </div>
+            
         </div>
-      </td>
-      <td>{item.totalProducts}</td>
+      </td> */}
+  
       <td>
+        <div className="fw-bold">{item.nombreCategoria}</div>
+      </td>
+     {/*  <td>
         <span className={`badge ${item.status === "Active" ? "bg-success" : "bg-secondary"}`}>
           {item.status}
         </span>
-      </td>
-      <td><TableActions /></td>
+      </td> */}
+      {/* <td><TableActions /></td> */}
+  {/*     <td> 
+        <DeleteCategoryButton category={item} /> 
+        <button className="btn btn-sm btn-outline-primary me-1 contorno-campo-estatico"><FaEdit /></button>
+      </td> */}
     </>
   );
 }
@@ -182,6 +194,12 @@ if (type === "order") {
     return <td colSpan={columns.length}>No renderer for type: {type}</td>;
   };
 
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      onPageChange(page);
+    }
+  };
+
   return (
     <div className="table-responsive">
       <table className="table table-hover align-middle">
@@ -192,22 +210,57 @@ if (type === "order") {
             ))}
           </tr>
         </thead>
+
         <tbody>
           {data.map((item) => (
-            <tr key={item.id}>
+            <tr 
+              key={item.id}
+              onClick={() => onSelect(item)}
+              onDoubleClick={() => onDoubleClick(item)}
+              //Marca visualmente la fila seleccionada
+              className={categorySelected?.id === item.id ? 'row-selected' : ''}
+              style={{ cursor: 'pointer' }}
+            >
               {renderRowByType(item)}
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Pagination */}
+ {/* Paginación dinámica */}
       <nav className="mt-4">
         <ul className="pagination justify-content-center">
-          <li className="page-item disabled"><button className="page-link">«</button></li>
-          <li className="page-item active"><button className="page-link">1</button></li>
-          <li className="page-item"><button className="page-link">2</button></li>
-          <li className="page-item"><button className="page-link">»</button></li>
+          <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+            <button 
+              className="page-link"
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              «
+            </button>
+          </li>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <li 
+              key={i} 
+              className={`page-item ${i === currentPage ? "active" : ""}`}
+            >
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(i)}
+              >
+                {i + 1}
+              </button>
+            </li>
+          ))}
+
+          <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
+            <button 
+              className="page-link"
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              »
+            </button>
+          </li>
         </ul>
       </nav>
     </div>

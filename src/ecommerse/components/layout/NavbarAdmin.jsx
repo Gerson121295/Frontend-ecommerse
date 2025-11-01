@@ -1,10 +1,16 @@
 
 import { FaUserCircle } from 'react-icons/fa';
 import { useState, useRef, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../../hooks/useAuthStore';
 
 export const NavbarAdmin = ({ sidebarOpen }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const dropdownRef = useRef();
+
+  const navigate = useNavigate(); //obtener la navegacion
+  const {startLogout} = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
+
 
   // Cerrar el menú si se hace clic fuera
   useEffect(() => {
@@ -16,6 +22,12 @@ export const NavbarAdmin = ({ sidebarOpen }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+
+   const onLogout = () => {
+    startLogout(); //llama la funcion startLogout del hook useAuthStore 
+    navigate('/auth/login'); //navega a la pagina de login
+  };
 
   return (
     <nav
@@ -73,7 +85,16 @@ export const NavbarAdmin = ({ sidebarOpen }) => {
                 <FaUserCircle className="me-2" />
                 My Profile
               </button>
-              <button className="dropdown-item text-danger">Logout</button>
+              <NavLink to="/" className="dropdown-item">
+                  Home
+              </NavLink>
+              <button
+                className="dropdown-item text-danger"
+                onClick={onLogout}
+                style={{ cursor: "pointer" }}
+              >
+                Salir
+              </button>            
             </div>
           )}
         </div>

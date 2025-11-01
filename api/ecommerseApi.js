@@ -44,3 +44,27 @@ ecommerseApi.interceptors.request.use(config => { //config es el objeto de la pe
 
 //exporta la funcion
 export default ecommerseApi;
+
+
+
+/*
+Flujo del interceptor:
+1. Cuando se realiza una petición HTTP utilizando ecommerseApi, el interceptor de solicitudes se activa primero.
+2. El interceptor modifica la configuración de la solicitud para incluir el token de autenticación en los encabezados.
+3. La solicitud modificada se envía al backend.
+4. Cuando el backend responde, el interceptor de respuestas (si estuviera definido) podría procesar la respuesta antes de que llegue al código que hizo la solicitud.
+5. Si hay un error en la solicitud o respuesta, el interceptor de respuestas puede manejar ese error y devolver una promesa rechazada.  
+Cuando llamas a: 
+    const { data } = await ecommerseApi.post("/categorias", categoria);
+El interceptor hace esto internamente:
+    const token = localStorage.getItem('token');
+if (token) {
+  config.headers = {
+    ...config.headers,
+    Authorization: `Bearer ${token}`,
+  };
+}
+Por tanto, el token viaja en cada request sin que tengas que añadirlo manualmente.
+Y el backend valida los roles y lanza un 403 Forbidden si el usuario no tiene permisos.
+
+*/

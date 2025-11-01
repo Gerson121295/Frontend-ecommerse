@@ -64,15 +64,46 @@ const registerFormFields = {
     registerPhone: '',
     registerAdmin: false,
     registerAssistant: false,
-    registerUser: true,
+    registerUser: true, //Siempre true por defecto
 }
+
+const registerFormValidations = {
+  registerName: [
+    (value) => value.trim().length >= 3 && value.trim().length <= 12,
+    'El nombre debe tener entre 3 y 12 caracteres'
+  ],
+  registerLastName: [
+    (value) => value.trim().length >= 3 && value.trim().length <= 12,
+    'El apellido debe tener entre 3 y 12 caracteres'
+  ],
+  registerUsername: [
+    (value) => value.trim().length >= 4 && value.trim().length <= 8,
+    'El usuario debe tener entre 4 y 8 caracteres'
+  ],
+  registerEmail: [
+    (value) => /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/.test(value),
+    'El correo no tiene un formato válido'
+  ],
+  registerPhone: [
+    (value) => /^\d{8}$/.test(value),
+    'El teléfono debe tener 8 dígitos numéricos'
+  ],
+  registerPassword: [
+    (value) => value.trim().length >= 7,
+    'La contraseña debe tener al menos 7 caracteres'
+  ],
+  registerPassword2: [
+    (value, formState) => value === formState.registerPassword,
+    'Las contraseñas no coinciden'
+  ]
+};
 
 export const Register = () => {
 
   const navigate = useNavigate(); //obtener la navegacion
 
   //hook useAuthStore se extrae propiedades del estado y acciones(funciones) del store de autenticacion
-  const {startRegister, errorMessage} = useAuthStore(); //extraemos la funcion startRegister del store de autenticacion
+  const {startRegister, errorMessage, status, user:authUser} = useAuthStore(); //extraemos la funcion startRegister del store de autenticacion
 
   //se llama al customHook useForm el cual se envia registerFormFields como estado inicial y se extrae propiedades y func.
   const { 
@@ -87,13 +118,21 @@ export const Register = () => {
     registerAdmin,
     registerAssistant,
     registerUser,
-    onInputChange: onRegisterInputChange
-  } = useForm(registerFormFields); //el onInputChange se renombra a onRegisterInputChange, debido a que el hook useForm se usara para loginForm tambien
+    onInputChange: onRegisterInputChange,
+    //extrae funciones y propiedades de validacion del useForm
+    onBlurField, //funcion que se llama cuando un campo pierde el foco
+    registerNameValid, registerLastNameValid, registerUsernameValid, 
+    registerEmailValid, registerPasswordValid, registerPassword2Valid, 
+    registerPhoneValid, isFormValid, touched
+  } = useForm(registerFormFields, registerFormValidations); //el onInputChange se renombra a onRegisterInputChange, debido a que el hook useForm se usara para loginForm tambien
 
 
-  const registerSubmit = (event) => {
+  const registerSubmit = async (event) => {
     event.preventDefault(); //evita el comportamiento por defecto del formulario. evita que al enviar
-    startRegister({
+    
+    if (!isFormValid) return; 
+
+    const {success, user} = await startRegister({
       nombre: registerName, 
       apellido: registerLastName,
       username: registerUsername,
@@ -104,16 +143,36 @@ export const Register = () => {
       assistant: registerAssistant,
       user: registerUser,
     });
-     navigate("/"); // Redirigir a la página principal después del register
+     
+    if (success) {
+    Swal.fire({
+      icon: "success",
+      title: `¡Bienvenido ${user?.nombre || user?.username || ""}! 🎉`,
+      text: "Tu cuenta ha sido creada exitosamente.",
+      showConfirmButton: false,
+      timer: 4000,
+      toast: true,
+      position: "top-end",
+    });
+
+    setTimeout(() => navigate("/"), 1500);
+  }
   }
 
-  useEffect(() => {
-    if(errorMessage !== undefined) {
-      //Si hay un mensaje de error, muestra una alerta
-      Swal.fire('Error en registro', errorMessage, 'error');
-    }
 
-  }, [errorMessage]) //se dispara el useEffect cuando cambie el errorMessage -falle el registro
+useEffect(() => {
+  if(errorMessage !== undefined) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el registro",
+      text: errorMessage,
+      showConfirmButton: false,
+      timer: 3000,
+      toast: true,
+      position: "top-end",
+    });
+  }
+}, [errorMessage]); //se dispara el useEffect cuando cambie el errorMessage -falle el registro
 
 
   //Renderiza el formulario de registro
@@ -137,9 +196,37 @@ export const Register = () => {
               registerAdmin={registerAdmin}
               registerAssistant={registerAssistant}
               registerUser={registerUser}
+
+              //Funciones
               onRegisterInputChange={onRegisterInputChange}
               registerSubmit={registerSubmit}
+
+              //Validaciones de los campos
+              onBlurField={onBlurField}
+
+              registerNameValid={registerNameValid}
+              registerLastNameValid={registerLastNameValid}
+              registerUsernameValid={registerUsernameValid}
+              registerEmailValid={registerEmailValid}
+              registerPasswordValid={registerPasswordValid}
+              registerPassword2Valid={registerPassword2Valid}
+              registerPhoneValid={registerPhoneValid}
+              isFormValid={isFormValid}
+              touched={touched}
+              //registerPhoneValid, isFormValid, touched, roles: authUser?.roles || [] 
+              roles={authUser?.roles || []} // pasamos roles al form
             />
+
+            {/* //Pasar todas las Props de Register
+            <RegisterForm {...formProps} /> 
+            //pasar todas las props especificamente, no todas
+              {...{
+                registerName, registerLastName, registerUsername,
+                registerNameValid,  registerPassword2Valid,
+                registerPhoneValid, isFormValid, touched,
+                roles: authUser?.roles || [] // pasamos roles al form
+              }}
+            */}
 
           </div>
         </div>

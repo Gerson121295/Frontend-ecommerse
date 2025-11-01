@@ -1,7 +1,39 @@
 import { FaShoppingCart } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../../hooks/useAuthStore';
+import { useSelector } from 'react-redux';
 
 export const NavbarApp = () => {
+
+  const navigate = useNavigate(); //obtener la navegacion
+
+  const {startLogout} = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
+
+  // Obtenemos el estado auth del store
+  const {status, user, isAdmin, isAssistant,  isUser} = useSelector((state) => state.auth);
+
+  const onLogout = () => {
+    startLogout(); //llama la funcion startLogout del hook useAuthStore 
+    navigate('/auth/login'); //navega a la pagina de login
+  };
+
+  const isAuthenticated = status === 'authenticated';
+  const userRoles = Array.isArray(user?.roles) ? user.roles : [];
+
+  const hasAdminAccess =
+    isAdmin || 
+    isAssistant || 
+    userRoles.includes('ROLE_ADMIN') || 
+    userRoles.includes('ROLE_ASSISTANT');
+
+    // Mostrar nombre y apellido si existen, si no mostrar username, si no mostrar 'Mi Cuenta'
+  const displayName =
+    user?.nombre
+    ? 
+  `${user.nombre}${user?.apellido ? " " + user.apellido : ""}`
+  : user?.username || 'Mi Cuenta';
+
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div className="container">
@@ -31,7 +63,6 @@ export const NavbarApp = () => {
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
-                href="#"
                 id="categoriasDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -66,7 +97,6 @@ export const NavbarApp = () => {
             <li className="nav-item dropdown me-3">
               <a
                 className="nav-link dropdown-toggle"
-                href="#"
                 id="langDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -90,24 +120,64 @@ export const NavbarApp = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Mi Cuenta
+
+                {isAuthenticated ? displayName : "Mi Cuenta"}
+
               </a>
               <ul className="dropdown-menu" aria-labelledby="userDropdown">
+
+                {/* Si el usuario no esta autenticado */}
+                {!isAuthenticated ? ( 
+                <>
                 <li>
-                  <Link to="/auth/login" className="dropdown-item">
+                  <NavLink to="/auth/login" className="dropdown-item">
                     Iniciar Sesión
-                  </Link>
+                  </NavLink>
                 </li>
+
+  
                 <li>
-                  <Link to="/auth/register" className="dropdown-item">
+                  <NavLink to="/auth/register" className="dropdown-item">
                     Registrarse
-                  </Link>
+                  </NavLink>
                 </li>
+
+
+                </>
+                ):(
+                  <>
+                {/* Si el usuario esta autenticado muestra las opciones de cuenta*/}
+                {hasAdminAccess && (     //(isAdmin || isAssistant) && ( 
+                <>
+                  <li>
+                    <Link to="/admin/dashboard" className="dropdown-item">
+                      Administración
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link to="/admin/register-user" className="dropdown-item">
+                      Registrar Usuario
+                    </Link>
+                  </li>
+                </>
+                )}
+
                  <li>
-                  <Link to="/admin/dashbord" className="dropdown-item">
-                    Administracion
-                  </Link>
+{/*                   <NavLink to="/auth/login" className="dropdown-item" onClick={ onLogout }>
+                    Salir
+                  </NavLink> */}
+                       <button
+                        className="dropdown-item"
+                        onClick={onLogout}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Salir
+                      </button>
                 </li>
+
+                </> 
+                )}
               </ul>
             </li>
 

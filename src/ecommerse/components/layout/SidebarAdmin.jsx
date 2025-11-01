@@ -24,8 +24,10 @@ export const SidebarAdmin = ({ toggleSidebar }) => {
       }} */
     >
       <div className="d-flex justify-content-between align-items-center mb-3">
-        {/* <h6 className="text-muted fw-semibold mb-0" color="#4a148c" size="1.5em"  >eCommerce</h6> */}
-        <img src="/src/assets/img/img-app/logo-moto.png" alt="" />
+        {/* <h6 className="text-muted fw-semibold mb-0" color="#4a148c" size="1.5em"  >eCommerce</h6> */}        
+         <Link to="/" className="navbar-brand">
+        <img src="/src/assets/img/img-app/logo-moto.png" alt="Logo" height="60" />
+        </Link>
         <button className="btn btn-sm" onClick={toggleSidebar}>
           <FaTimes color="#4a148c" size="1.5em"  />
         </button>

@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { AddProduct, DashboardAdmin, ManageCategories, ManageOrders, ManageProducts, ManageUsers } from "../pages/admin";
+import { Register } from "../pages/public";
 
 export const PrivateRoutes = [
     { // Objeto de ruta en el router
@@ -25,6 +26,11 @@ export const PrivateRoutes = [
     {
         path: "add-product",
         element: <AddProduct />
+    },
+    
+    {
+        path: "register-user",
+        element: <Register />,
     },
 
     { //SI entro a esta ruta EcommerseRoutes y no estoy dentro del / cualquier otra ruta va a redirigir al /

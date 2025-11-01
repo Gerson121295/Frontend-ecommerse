@@ -47,6 +47,83 @@
   margin-left: 250px;
 }
 
+/*Estilo de notificaciones para SweatAlert2 */
+.swal2-container .small-toast {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.85rem !important;
+  min-width: 250px !important;
+}
+
+/* Estilo glass translúcido (moderno) - customClass: { popup: 'toast-glass' }*/
+.swal2-container .toast-glass {
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+  font-size: 0.9rem !important;
+  padding: 1rem 1.25rem !important;
+}
+
+/*Info: Estilo minimalista (gris claro) - customClass: { popup: 'toast-minimal' } */
+.swal2-container .toast-minimal {
+  background: #f8f9fa !important;
+  color: #212529 !important;
+  font-size: 0.9rem !important;
+  padding: 0.8rem 1rem !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+}
+
+/* Success: Estilo colorido (tipo Material Design) - customClass: { popup: 'toast-colorful' }  */
+.swal2-container .toast-colorful {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  border-radius: 0.6rem !important;
+  padding: 1rem 1.2rem !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+/* Error: Estilo oscuro */
+.swal2-container .toast-dark {
+  background: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  font-size: 0.9rem !important;
+  border-radius: 0.5rem !important;
+  padding: 0.9rem 1.1rem !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+
+/* Warning: Estilo corporativo */
+.swal2-container .toast-corporate {
+  background: #ffffff !important;
+  color: #333 !important;
+  border-left: 5px solid #007bff !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.9rem !important;
+  padding: 1rem 1.25rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+/* Estilo de DataTable - Fila seleccionada (resaltada) */
+.row-selected {
+  background-color: rgba(99, 102, 241, 0.15) !important; /* tono morado suave */
+  border-left: 4px solid #6366f1 !important;
+}
+
+/* Al pasar el mouse */
+.table-hover tbody tr:hover {
+  background-color: rgba(99, 102, 241, 0.08);
+}
+
+
+
+
 
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

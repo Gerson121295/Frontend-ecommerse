@@ -1,0 +1,15 @@
+
+
+.text-morado {
+  color: #6c3483;
+}
+
+/* Enlaces morados */
+.link-morado {
+  color: #6c3483;
+  text-decoration: none;
+}
+
+.link-morado:hover {
+  text-decoration: underline;
+}
