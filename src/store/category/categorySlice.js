@@ -49,7 +49,8 @@ const initialState = {
                 //state.isLoading = false;
             },
 
-            onDeleteCategory: (state) => {   //, { payload }) => {
+            //Elimina la categoria seleccionada - el id se obtiene de redux store category.categorySelected
+/*             onDeleteCategory: (state) => {   
                 
                 //Forma 1: - Recibe el id mendiante payload
                 //state.categories = state.categories.filter(category => category.id !== payload);
@@ -62,16 +63,31 @@ const initialState = {
                     );
                     state.categorySelected = null; //limpia la categoria seleccionada, para no tener una categoria seleccionada que ya no existe
                 }
+            }, */
+
+            //Elimina la categoria por id recibido en el payload
+            onDeleteCategory: (state, { payload }) => {
+                state.categories = state.categories.filter(
+                    (category) => category.id !== payload
+                );
+                // Limpia la categoría seleccionada si la que se eliminó era la seleccionada
+                if (state.categorySelected?.id === payload) {
+                    state.categorySelected = null;
+                }
             },
 
-            // Guarda los datos en memoria del frontend (en tu store Redux).
+            // Guarda los datos en memoria del frontend (en store Redux).
             onLoadCategories: (state, { payload }) => {
                 state.isLoading = false;
-                state.categories = payload.content; // Guarda las categorías en memoria (Redux) - las categorias son el payload que se recibe, Se agrega .content porque el backend regresa un objeto Page(paginacion)
+                state.categories = payload.content || payload; // Guarda las categorías en memoria (Redux) - las categorias son el payload que se recibe, Se agrega .content porque el backend regresa un objeto Page(paginacion)
                 state.currentPage = payload.number; //Guarda la página actual
                 state.totalPages = payload.totalPages; //Guarda el total de páginas
             },
 
+            // Limpiar la categoria seleccionada
+            onClearSelectedCategory: (state) => {
+                state.categorySelected = null;
+            },
 
             onError: (state, { payload }) => {
                 state.errorMessage = payload;
@@ -91,6 +107,7 @@ export const {
         onUpdateCategory,
         onDeleteCategory,
         onLoadCategories,
+        onClearSelectedCategory,
         onError,
         onClearError,
     } = categorySlice.actions;

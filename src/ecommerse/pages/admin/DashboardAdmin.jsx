@@ -1,5 +1,5 @@
 
-import { DashboardCard, DashboardChart, Footer, NavbarAdmin, SidebarAdmin } from "../../components/layout";
+import { DashboardCard, DashboardChart, SidebarAdmin } from "../../components/layout";
 
 export const DashboardAdmin = () => {
 

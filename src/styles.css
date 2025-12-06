@@ -12,7 +12,6 @@
   border-color: #6c3483;
 }
 
-
 .btn-blanco-morado {
   background-color: white;
   color: #6c3483;
@@ -41,13 +40,22 @@
   color: #6c3483 !important;
 }
 
-
-/* opcional, si no usas Tailwind ni Bootstrap utility classes */
 .ms-250 {
   margin-left: 250px;
 }
 
 /*Estilo de notificaciones para SweatAlert2 */
+
+/* Asegura que TODO SweetAlert esté por encima del navbar */
+.swal2-container {
+  z-index: 5000 !important;
+}
+
+/* Asegura que el popup también quede encima */
+.swal2-popup {
+  z-index: 5001 !important;
+}
+
 .swal2-container .small-toast {
   padding: 0.75rem 1rem !important;
   font-size: 0.85rem !important;
@@ -110,7 +118,7 @@
 }
 
 
-/* Estilo de DataTable - Fila seleccionada (resaltada) */
+/**** Estilo de DataTable - Fila seleccionada (resaltada) ****/
 .row-selected {
   background-color: rgba(99, 102, 241, 0.15) !important; /* tono morado suave */
   border-left: 4px solid #6366f1 !important;
@@ -122,74 +130,75 @@
 }
 
 
-
-
-
-/* :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Contenedor general de paginación */
+.custom-pagination-container {
+  background-color: #b7aebb; /* morado claro suave */
+  padding: 10px 16px;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(108, 52, 131, 0.1);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
+/* Estructura base */
+.custom-pagination {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
+/* Botones base */
+.custom-pagination .page-item .page-link {
+  color: #6c3483;
+  border: 1px solid #6c3483;
+  background-color: white;
+  padding: 6px 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.2s ease-in-out;
+  min-width: 34px;
+  text-align: center;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+/* Hover */
+.custom-pagination .page-item .page-link:hover {
+  background-color: #750ea1;
+  color: #fff;
+  border-color: #6c3483;
+  box-shadow: 0 0 6px rgba(108, 52, 131, 0.3);
+}
+
+/* Página activa */
+.custom-pagination .page-item.active .page-link {
+  background-color: #6c3483 !important;
+  color: #fff !important;
+  border-color: #6c3483 !important;
+  box-shadow: 0 0 8px rgba(108, 52, 131, 0.4);
+}
+
+/* Deshabilitado */
+.custom-pagination .page-item.disabled .page-link {
+  color: #aaa !important;
+  border-color: #ddd !important;
+  background-color: #f1f1f1 !important;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.custom-pagination .page-item {
+  margin: 0;
+}
+
+
+/* Ocultar scrollbars (Chrome & Edge) */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}

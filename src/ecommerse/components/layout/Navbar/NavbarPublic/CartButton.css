@@ -1,0 +1,73 @@
+
+/* PALETA MORADA */
+
+.text-morado {
+  color: #6c3483 !important;
+}
+
+.text-morado-disabled {
+  color: #c8a4d6 !important;
+  opacity: 0.7;
+}
+
+.bg-morado-disabled {
+  background-color: #c8a4d6 !important;
+}
+
+/* DESHABILITADO */
+
+.cart-disabled {
+  pointer-events: none;
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* BOTÓN MODERNO */
+
+.cart-button {
+  transition: all 0.25s ease;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.cart-button:not(.cart-disabled):hover {
+  background-color: rgba(108, 52, 131, 0.1);
+  box-shadow: 0 4px 10px rgba(108, 52, 131, 0.25);
+  transform: translateY(-2px);
+}
+
+/* SHAKE ANIMATION ICON */
+
+@keyframes shakeAnimation {
+  0% { transform: translate(0); }
+  20% { transform: translate(-3px, 0); }
+  40% { transform: translate(3px, 0); }
+  60% { transform: translate(-3px, 0); }
+  80% { transform: translate(3px, 0); }
+  100% { transform: translate(0); }
+}
+
+.shake {
+  animation: shakeAnimation 0.5s ease;
+}
+
+/*  POP ANIMATION BADGE */
+
+@keyframes popAnimation {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.pop {
+  animation: popAnimation 0.3s ease-out;
+}
+
+/* Estilo moderno para badge */
+.badge-modern {
+  font-size: 0.8rem;
+  padding: 0.35em 0.55em;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}

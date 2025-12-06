@@ -1,0 +1,37 @@
+
+
+.product-card {
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,.1);
+}
+
+.product-img {
+  height: 220px;
+  object-fit: cover;
+}
+
+.btn-morado {
+  background-color: #6a0dad;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.btn-morado:hover {
+  background-color: #520a8a;
+  color: white;
+}
+
+.no-results {
+  text-align: center;
+  color: #6a0dad;
+  font-size: 1.5rem;
+  margin-top: 50px;
+}
+

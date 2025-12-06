@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom"
-import { Footer, NavbarApp } from "../../ecommerse/components/layout"
+import { Footer} from "../../ecommerse/components/layout"
 import { useAuthStore } from "../../hooks/useAuthStore";
-import { use, useEffect } from "react";
+import {useEffect } from "react";
+import { NavbarApp } from "../../ecommerse/components/layout/Navbar/NavbarPublic";
 
 export const AuthLayout = () => {
 

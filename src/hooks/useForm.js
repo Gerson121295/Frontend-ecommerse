@@ -64,6 +64,11 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
         setTouched({}); //resetea los campos tocados
      }
 
+    //Resetear solo touched desde el componente padre
+    const onResetTouched = () => {
+        setTouched({});
+    };
+
      //Funcion de validacion de los campos
      const createValidators = () => {
 
@@ -88,9 +93,11 @@ export const useForm = (initialForm = {}, formValidations = {}) => { //recibe el
         ...formValidation, //esparce el objeto que tiene todas las propiedades de validacion
         isFormValid,
         formState,
+        setFormState,
         touched,
         onInputChange,
         onResetForm,
+        onResetTouched,
         onBlurField,
     }
 

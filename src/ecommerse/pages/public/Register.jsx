@@ -103,7 +103,7 @@ export const Register = () => {
   const navigate = useNavigate(); //obtener la navegacion
 
   //hook useAuthStore se extrae propiedades del estado y acciones(funciones) del store de autenticacion
-  const {startRegister, errorMessage, status, user:authUser} = useAuthStore(); //extraemos la funcion startRegister del store de autenticacion
+  const {startRegister, errorMessage, user:authUser} = useAuthStore(); //extraemos la funcion startRegister del store de autenticacion
 
   //se llama al customHook useForm el cual se envia registerFormFields como estado inicial y se extrae propiedades y func.
   const { 

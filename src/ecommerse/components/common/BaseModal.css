@@ -1,0 +1,67 @@
+/* ANIMACIÓN */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* HEADER FIJO */
+.modal-header-modern {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: white;
+  /* padding: 16px 20px; */
+  padding: 10px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title-modern {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn-modern {
+  border: none;
+  background: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+.close-btn-modern:hover {
+  opacity: 1;
+}
+
+/* CUERPO SCROLLEABLE SIN SCROLLBAR */
+.modal-body-modern {
+  padding: 10px;
+  height: calc(95vh - 25px);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.modal-body-modern::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .modal-header-modern {
+    padding: 14px 16px;
+  }
+  .modal-body-modern {
+    padding: 16px;
+  }
+}

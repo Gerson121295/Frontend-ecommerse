@@ -1,53 +1,66 @@
 
-import { FaEdit } from "react-icons/fa";
-import { DeleteCategoryButton } from "./product/DeleteCategoryButton";
+import { DeleteCategoryButton } from "./category/DeleteCategoryButton";
 import TableActions from "./TableActions";
 import './../../../styles.css'; // Importa estilos globales
+import { EditCategoryButton } from "./category/EditCategoryButton";
+import { DeleteProductButton } from "./product/DeleteProductButton";
+import { EditProductButton } from "./product/EditProductButton";
+import { getEnvVariables } from "../../../helpers/getEnvVariables";
+
+//extrae la ruta principal para las peticions desde .env  variables de entorno
+const { VITE_API_URL } = getEnvVariables();
 
 const DataTable = ({ columns, data, type, 
                       onSelect, onDoubleClick,
                       currentPage, totalPages, onPageChange,
-                      categorySelected 
+                      categorySelected,
+
+                      totalElements, productSelected, pedidoSelected
                   }) => {
 
   const renderRowByType = (item) => {
+
     if (type === "product") {
       return (
         <>
           <td>
             <div className="d-flex align-items-center">
               <img
-                src={item.image}
-                alt={item.name}
+                src={VITE_API_URL + item.imageUrl}
+                alt={item.nombre}
                 className="rounded me-2"
                 width={40}
                 height={40}
               />
               <div>
-                <div className="fw-bold">{item.name}</div>
-                <small className="text-muted">{item.description}</small>
+                <div className="fw-bold">{item.nombre}</div>
+                <small className="text-muted">{item.descripcion}</small>
               </div>
             </div>
           </td>
-          <td><span className="badge bg btn-morado">{item.category}</span></td>
+          <td><span className="badge bg btn-morado">{item.categoria}</span></td>
           <td>
             <div className="form-check form-switch">
               <input
                 className="form-check-input"
                 type="checkbox"
-                defaultChecked={item.stock}
+                defaultChecked={item.activa}
               />
             </div>
           </td>
-          <td>{item.sku}</td>
-          <td>{item.price}</td>
-          <td>{item.qty}</td>
-          <td>
-            <span className={`badge ${item.status === "Active" ? "bg-success" : "bg-secondary"}`}>
-              {item.status}
+          <td>{item.codigoReferencia}</td>
+          <td>{item.precioUnitario}</td>
+          <td>{item.unidadesEnStock}</td>
+          <td>{item.fechaCreacion}</td>
+         {/*  <td>
+            <span className={`badge ${item.activa === "Active" ? "bg-success" : "bg-secondary"}`}>
+              {item.activa}
             </span>
+          </td> */}
+          <td>
+            <DeleteProductButton product={item} /> 
+            <EditProductButton product={item} /> 
           </td>
-          <td><TableActions /></td>
         </>
       );
     }
@@ -95,102 +108,71 @@ const DataTable = ({ columns, data, type,
     if (type === "category") {
   return (
     <>
- {/*      <td>
-        <div className="d-flex align-items-center">
-          <img
-            src={item.icon}
-            alt={item.nombreCategoria}
-            className="rounded me-2"
-            width={40}
-            height={40}
-          />
-            
-        </div>
-      </td> */}
-  
       <td>
         <div className="fw-bold">{item.nombreCategoria}</div>
       </td>
-     {/*  <td>
-        <span className={`badge ${item.status === "Active" ? "bg-success" : "bg-secondary"}`}>
-          {item.status}
-        </span>
-      </td> */}
-      {/* <td><TableActions /></td> */}
-  {/*     <td> 
+      <td> 
         <DeleteCategoryButton category={item} /> 
-        <button className="btn btn-sm btn-outline-primary me-1 contorno-campo-estatico"><FaEdit /></button>
-      </td> */}
+        <EditCategoryButton category={item} /> 
+      </td>
     </>
   );
 }
 
-
 if (type === "order") {
   return (
     <>
-      <td>{item.orderCode}</td>
-      <td>{item.date}</td>
+      <td>{item.numeroSeguimiento}</td>
+      <td>{item.fechaCreacion}</td>
       <td>
         <div className="d-flex align-items-center">
-          {item.customer.avatar ? (
-            <img
-              src={item.customer.avatar}
-              alt={item.customer.name}
-              className="rounded-circle me-2"
-              width={40}
-              height={40}
-            />
-          ) : (
-            <div
-              className="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center me-2"
-              style={{ width: 40, height: 40 }}
-            >
-              {item.customer.name.slice(0, 2).toUpperCase()}
-            </div>
-          )}
           <div>
-            <div className="fw-bold">{item.customer.name}</div>
-            <small className="text-muted">{item.customer.email}</small>
+            <div className="fw-bold">{item.usuario}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div className="d-flex align-items-center">
+          <div>
+            <div className="fw-bold">{item.precioTotal}</div>
+            <small className="text-muted">{item.cantidadTotal}</small>
           </div>
         </div>
       </td>
       <td>
         <span className={`badge ${
-          item.payment === "Paid"
+          item.estado === "TRUE"
             ? "bg-success"
-            : item.payment === "Pending"
+            : item.estado === "FALSE"
             ? "bg-warning"
             : "bg-danger"
         }`}>
-          {item.payment}
+          {item.estado}
         </span>
       </td>
       <td>
         <span className={`badge ${
-          item.status === "Delivered"
-            ? "bg-success"
-            : item.status === "Out for Delivery"
-            ? "bg-primary"
-            : item.status === "Dispatched"
+          item.estadoPago === "APROBADO"
+            ? "bg-success"  //? "bg-primary"
+            : item.estadoPago === "PENDIENTE"
             ? "bg-warning"
-            : item.status === "Ready to Pickup"
+            : item.estadoPago === "RECHAZADO"
             ? "bg-info"
             : "bg-danger"
         }`}>
-          {item.status}
+          {item.estadoPago}
         </span>
       </td>
       <td>
-        <span className="me-2">{item.method}</span>
-        <small className="text-muted">{item.maskedCard}</small>
+        <span className="me-2">
+          {/* {item.productos} */}
+            {item.productos?.map(p => p.nombre).join(", ")}
+        </span>
       </td>
       <td><TableActions /></td>
     </>
   );
 }
-
-
     return <td colSpan={columns.length}>No renderer for type: {type}</td>;
   };
 
@@ -218,7 +200,18 @@ if (type === "order") {
               onClick={() => onSelect(item)}
               onDoubleClick={() => onDoubleClick(item)}
               //Marca visualmente la fila seleccionada
-              className={categorySelected?.id === item.id ? 'row-selected' : ''}
+              //className={categorySelected?.id === item.id ? 'row-selected' : ''}
+              //if (type === "product")             
+
+              className={ 
+                type === "product"
+                  ? productSelected?.id === item.id ? 'row-selected' : ''
+                  : type === "category"
+                  ? categorySelected?.id === item.id ? 'row-selected' : ''
+                  : pedidoSelected?.id === item.id ? 'row-selected' : ''
+              }
+
+
               style={{ cursor: 'pointer' }}
             >
               {renderRowByType(item)}
@@ -229,13 +222,13 @@ if (type === "order") {
 
  {/* Paginación dinámica */}
       <nav className="mt-4">
-        <ul className="pagination justify-content-center">
+        <ul className="pagination justify-content-center custom-pagination">
           <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
             <button 
               className="page-link"
               onClick={() => handlePageChange(currentPage - 1)}
             >
-              «
+              « 
             </button>
           </li>
 

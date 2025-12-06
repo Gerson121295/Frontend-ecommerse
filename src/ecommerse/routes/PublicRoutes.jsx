@@ -1,5 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { Categories, Checkout, Home, InfoProduct, Register, ShoppingCart } from "../pages/public";
+import { Categories, Home, InfoProduct, Register, ShoppingCart } from "../pages/public";
+import { ProductByCategoryPage } from "../pages/public/productByCategoryPage";
+import { SearchResultsPage } from "../pages/public/SearchResultsPage";
+import { Orders } from "../pages/public/Orders";
 
 
 export const PublicRoutes = [
@@ -12,16 +15,29 @@ export const PublicRoutes = [
         element: <Categories />,
     },
     {
+        path:"/categories/:categoriaId",  //id definido en ProductByCategoryPage en params para acceder al id
+        element:<ProductByCategoryPage/>
+    },
+/*     {
         path: "/checkout",
         element: <Checkout />,
-    },
+    }, */
+
     {
-        path: "/product/:id", // Asumiendo que mostrarás producto por ID
+        path: "/orders",
+        element: <Orders />,
+    }, 
+    {
+        path: "/productos/:id", // Asumiendo que mostrarás producto por ID
         element: <InfoProduct />,
     },
     {
         path: "/register",
         element: <Register />,
+    },
+    {
+        path:"/search",
+        element: <SearchResultsPage />
     },
     {
         path: "/cart",

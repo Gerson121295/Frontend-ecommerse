@@ -8,6 +8,7 @@ import {
         onUpdateCategory,
         onDeleteCategory,
         onLoadCategories,
+        onClearSelectedCategory,
         onError,
         onClearError,
 } from "../store/category/categorySlice";
@@ -17,7 +18,7 @@ export const useCategory = () => {
 
     //useSelector permite acceder al estado de categorías desde el store de Redux y obtener los estados de category ->reducers de categorySlice
     const{
-        isLoading, categories, currentPage, totalPages,
+        isLoading, categories = [], currentPage, totalPages,
         errorMessage, categorySelected,
     } = useSelector(state => state.category);
 
@@ -38,7 +39,7 @@ export const useCategory = () => {
         try {
             //peticion get para mostrar los eventos guardados en la BD
             //const {data} = await ecommerseApi.get('/categorias'); //sin paginacion
-            const {data} = await ecommerseApi.get(`/categorias/paginadas?page=${page}&size=${size}&sortBy=${sortBy}`); 
+            const {data} = await ecommerseApi.get(`/categorias/paginadas?page=${page}&size=${size}&sortBy=${sortBy}`); //sortBy ordena por id(orden numerico) o nombreProduct(nombre alfabeto)
             dispatch( onLoadCategories(data)); // Guarda las categorías en memoria (Redux)
         } catch (error) {
             console.error(error);
@@ -48,9 +49,23 @@ export const useCategory = () => {
         }
     };
 
+     //Cargar todas las categorias sin paginación
+    const startLoadingAllCategories = async () => {
+        try {
+        const { data } = await ecommerseApi.get('/categorias');
+        dispatch(onLoadCategories(data));
+        } catch (error) {
+        console.error(error);
+        const message = error.response?.data?.error || 'Error al cargar categorías';
+        dispatch(onError(message));
+        }
+    };
+
     //Crea o actualiza categoria
     const startSavingCategory = async(categoria) => { //recibe la 
         
+         if (!categoria || !categoria.nombreCategoria?.trim()) return false;
+
         try {
             //Si la categoria tiene id entonces se va a actualizar, si no se va crear una nueva categoria
             if(categoria.id){
@@ -78,9 +93,9 @@ export const useCategory = () => {
                     dispatch(onUpdateCategory(data)); //actualiza la categoria despues de cerrar la notificación
                 });
 
-            return; //para que ya no siga ejecutando  y evitar definir el siguiente else
+            return true; //para que ya no siga ejecutando  y evitar definir el siguiente else
             }//else{
-
+        
             //creando categoria - no tiene id la data que es enviada por lo tanto se creará categoria y el backend creará el id y lo retornará
             const {data} = await ecommerseApi.post(`/categorias`, categoria);  //peticion POST recibe la ruta y la data de la categoria a guardar. de resp desestructuramos para obtener la data
             
@@ -109,6 +124,7 @@ export const useCategory = () => {
                 dispatch(onAddNewCategory(data)); //agrega la nueva categoria despues de cerrar la notificación
             });
 
+            return true;
             //return { success: true, category: data };
         } catch (error) {
             console.error(error);
@@ -130,6 +146,7 @@ export const useCategory = () => {
                     popup: 'toast-dark'
                 }
             });
+            return false;
             //return { success: false, message };
         }
     
@@ -143,28 +160,35 @@ export const useCategory = () => {
             //return { success: true, category: data };
         } catch (error) {
             console.error(error);
-            const message = error.response?.data?.message || 'Error al actualizar categoría';
+            const message = error.response?.data?.error || 'Error al actualizar categoría';
             dispatch(onError(message));
             //return { success: false, message };
         }
     }; */
 
     //Eliminar categoría
-    const startDeletingCategory = async() => { //F1 recibe (id)
+    const startDeletingCategory = async(id) => { //F1 recibe (id)
         
         try {
-            //await ecommerseApi.delete(`/categorias/${id}`);
-            //dispatch( onDeleteCategory(id) );
+            
+            //Realiza la petición DELETE al backend
+            const { data } = await ecommerseApi.delete(`/categorias/${id}`);
 
-            await ecommerseApi.delete(`/categorias/${categorySelected.id}`);
-            dispatch( onDeleteCategory(categorySelected.id) );
+            //Extrae el mensaje del backend si existe, o usa uno por defecto
+            const successMessage = data?.mensaje || 'Categoría eliminada correctamente.';
+            
+            dispatch( onDeleteCategory(id) );
+
+            //F2 obtiene la categoria seleccionada desde el store - No recibe id
+            /* await ecommerseApi.delete(`/categorias/${categorySelected.id}`); 
+            dispatch( onDeleteCategory(categorySelected.id) ); */
             //await startLoadingCategories(currentPage, 5); // vuelve a cargar data actualizada
 
             Swal.fire({
                 icon: 'success',
                 title: 'Categoría eliminada',
-                text: 'Se eliminó correctamente.',
-                timer: 2000,
+                text: successMessage,
+                timer: 1500,
                 showConfirmButton: false,
 
                 toast: true,
@@ -206,6 +230,47 @@ export const useCategory = () => {
         }
     };
 
+    const startLoadingCategoryById = async (id) => {
+        try {
+            const { data } = await ecommerseApi.get(`/categorias/${id}`);
+            dispatch(onSetCategorySelected(data)); // guarda la categoría en el store
+            return data; // opcional, si deseas usarla directamente en un form
+        } catch (error) {
+            console.error(error);
+            const message = error.response?.data?.error || 'Error al cargar categoría';
+            dispatch(onError(message));
+        }
+    }
+
+    //Buscar Categoria por nombre - Listando todas las categorias y buscar por nombre(No esta metodo en backend)
+    const startGettingCategoryByName = async (nombreCategoria) => {
+  try {
+    const { data } = await ecommerseApi.get(`/categorias`);
+    // Suponiendo que /categorias devuelve la lista completa de categorías
+    const categoriaEncontrada = data.find(
+        (cat) => cat.nombreCategoria.toLowerCase() === nombreCategoria.toLowerCase()
+    );
+
+    if (categoriaEncontrada) {
+      dispatch(onSetCategorySelected(categoriaEncontrada))// guarda la categoria en el store
+      return categoriaEncontrada;
+    } else {
+        dispatch(onClearSelectedCategory());
+        console.warn(`Categoría con nombre "${nombreCategoria}" no encontrada.`);
+        return null;
+    }
+  } catch (error) {
+    console.error("Error al buscar la categoría por nombre:", error);
+    const message = error.response?.data?.error || 'Error al cargar categoría';
+    dispatch(onError(message));
+    return null;
+  }
+};
+
+    //Limpiar la categoría seleccionada
+    const clearSelectedCategory = () => {
+        dispatch(onClearSelectedCategory());
+    };
 
         //limpiar los errores
         const clearCategoryError = () => {
@@ -225,12 +290,18 @@ export const useCategory = () => {
 
            hasCategorySelected: categorySelected?.id, //si categorySelected tiene id retorna true, si no retorna false
 
-
             // Métodos
+          startLoadingAllCategories,
+
           setCategorySelected,
           startLoadingCategories,
           startSavingCategory,
           startDeletingCategory,
+          
+          startLoadingCategoryById,
+          startGettingCategoryByName,
+
+          clearSelectedCategory,
           clearCategoryError
         }
     };

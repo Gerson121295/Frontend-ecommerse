@@ -1,0 +1,21 @@
+
+.table-actions {
+  display: inline-flex;            /* Permite alinear botones horizontalmente dentro del <td> */
+  flex-direction: row;             /* Los botones van en fila */
+  align-items: center;             /* Centra los iconos verticalmente */
+  justify-content: flex-start;     /* Los alinea al inicio */
+  gap: 0.6rem;                     /* Espacio entre botones */
+  padding: 2px 0;                  /* Pequeño espacio vertical */
+  margin-right: 0.2rem;            /* separación entre botones */
+}
+
+.contorno-campo-estatico {
+  border-radius: 6px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.contorno-campo-estatico:hover {
+  transform: scale(1.1);
+}
+
+

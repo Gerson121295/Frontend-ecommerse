@@ -1,0 +1,102 @@
+
+
+.dropzone {
+  border: 2px dashed #777;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone-invalid {
+  border-color: #dc3545 !important; /* rojo */
+  background: #f8f8f8;
+  /*filter: drop-shadow(0 0 2px #dc3545); /* sombra roja */
+  box-shadow: 0 0 0 .25rem rgba(220,53,69,.25); /* RED GLOW Bootstrap */
+}
+
+.dropzone-container {
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: border 0.2s ease-in-out;
+}
+
+.dropzone-container:hover {
+  background-color: #f1f1f1;
+}
+
+.icon-invalid {
+  color: #dc3545 !important;         /* rojo bootstrap */
+  filter: drop-shadow(0 0 2px #dc3545); /* sombra roja */
+}
+
+
+/* Icono de subir imagen */
+
+/* Hace que el <span.input-group-text> luzca como un chip con borde */
+.input-icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;                /* espacio interior para ver el borde */
+  border-radius: 6px;          /* borde redondeado alrededor del icono */
+  border: 1px solid transparent; /* por defecto sin borde */
+  background: transparent;
+  /* transition: border-color 0.15s ease, box-shadow 0.15s ease; */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+}
+
+/* Estado inválido: borde rojo y pequeña sombra */
+.input-icon-chip.invalid {
+  border-color: #dc3545 !important;
+  /* box-shadow: 0 0 6px rgba(220,53,69,0.12); */
+  box-shadow: 0 0 0 .25rem rgba(220,53,69,.25) !important; /* exacto */
+  background: #fff; /* opcional, para que contraste */
+}
+
+/* Si quieres que el fondo del chip también tome el rojo suave (como tu dropzone-invalid) */
+.input-icon-chip.invalid.pink-bg {
+  background: #ffecec;
+}
+
+/* Asegura que el svg dentro esté rojo también */
+.input-icon-chip.invalid svg,
+.input-icon-chip.invalid .react-icon {
+  color: #dc3545 !important;
+}
+
+/* Estilo general del ícono */
+/* .icon-link {
+  color: #6c757d;
+  transition: color 0.2s ease-in-out;
+} */
+
+/* Contenedor que detecta el focus */
+.input-icon-container:focus-within .input-icon-chip {
+  border-color: #0d6efd !important;   /* borde azul */
+  /* box-shadow: 0 0 32px rgba(13, 110, 253, 0.25);
+  filter: drop-shadow(0 0 18px rgba(13,110,253,0.35)); */
+  box-shadow: 0 0 0 .25rem rgba(13,110,253,.25) !important; /* exacto */
+}
+
+/* Ícono azul cuando el input tiene focus */
+.input-icon-container:focus-within .icon-link {
+  color: #0d6efd !important; /* azul Bootstrap */
+}
+
+/* Ícono rojo cuando hay error */
+.input-icon-container .icon-link.is-invalid {
+  color: #dc3545 !important;
+}
+
+/* ⚠ PRIORIDAD: si el input está inválido, el focus NO debe pintar azul */
+.input-icon-container:focus-within .input-icon-chip.invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 .25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Icono también debe mantenerse rojo */
+.input-icon-container:focus-within .icon-link.is-invalid {
+  color: #dc3545 !important;
+}
+

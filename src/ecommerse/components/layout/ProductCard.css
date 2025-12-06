@@ -1,1 +1,113 @@
+/* Tarjeta */
+.product-card-premium {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
 
+.product-card-premium:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+/* Imagen */
+.premium-img-container {
+  height: 250px;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-img {
+  max-height: 220px;
+  object-fit: contain;
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.product-card-premium:hover .premium-img {
+  transform: scale(1.12);
+  filter: brightness(0.75);
+}
+
+/* Overlay con blur */
+.premium-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.45);
+  backdrop-filter: blur(1px); /* 4 */
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.35s ease;
+}
+
+.product-card-premium:hover .premium-overlay {
+  opacity: 1;
+}
+
+/* Texto / Botón ver producto */
+.btn-premium-view {
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 10px 22px;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.btn-premium-view:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.06);
+}
+
+/* Botón carrito flotante */
+.btn-premium-cart {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: #6c3483;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.product-card-premium:hover .btn-premium-cart {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info */
+.premium-info {
+  background: white;
+}
+
+.price-premium {
+  color: #6c3483;
+  font-size: 1.3rem;
+  font-weight: 700;
+}

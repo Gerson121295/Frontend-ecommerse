@@ -2,14 +2,14 @@
 import { FaUserCircle } from 'react-icons/fa';
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../../hooks/useAuthStore';
+import { useAuthStore } from '../../../../hooks/useAuthStore';
 
 export const NavbarAdmin = ({ sidebarOpen }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const dropdownRef = useRef();
 
   const navigate = useNavigate(); //obtener la navegacion
-  const {startLogout} = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
+  const {user, startLogout} = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
 
 
   // Cerrar el menú si se hace clic fuera
@@ -51,23 +51,23 @@ export const NavbarAdmin = ({ sidebarOpen }) => {
           </h4>
         </div>
 
-        {/* 👤 Usuario */}
+        {/* Usuario */}
         <div className="d-flex align-items-center position-relative" ref={dropdownRef}>
           <div
             className="d-flex align-items-center cursor-pointer"
             onClick={() => setOpenMenu(!openMenu)}
             style={{ cursor: 'pointer' }}
           >
-            <img
+           {/*  <img
               src="/src/assets/img/productos/abarrotes/Arroz Blanco La Cosecha.png"
               alt="User avatar"
               className="rounded-circle me-2"
               width="40"
               height="40"
-            />
+            /> */}
             <div className="d-none d-md-block text-start">
-              <div className="fw-semibold">John Doe</div>
-              <small className="text-muted">admin@sneat.com</small>
+              <div className="fw-semibold">{user.username}</div>
+              {/* <small className="text-muted">{user.roles}</small> */}
             </div>
           </div>
 
@@ -79,6 +79,7 @@ export const NavbarAdmin = ({ sidebarOpen }) => {
                 top: '100%',
                 right: 0,
                 marginTop: '0.5rem',
+                zIndex:'6000'
               }}
             >
               <button className="dropdown-item">

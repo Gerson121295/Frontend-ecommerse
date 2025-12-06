@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom"
-import { Footer, NavbarAdmin, SidebarAdmin } from "../components/layout";
+import { Footer, SidebarAdmin } from "../components/layout";
 import { FaBars } from "react-icons/fa";
 import { useAuthStore } from "../../hooks/useAuthStore";
-
+import { NavbarAdmin } from "../components/layout/Navbar/NavbarAdmin";
+import { NavbarApp } from "../components/layout/Navbar/NavbarPublic";
+import { useSelector } from "react-redux";
 
 export const PrivateLayout = () => {
 
@@ -11,7 +13,22 @@ export const PrivateLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     //Se extrae propiedades y func del hook useAuthStore para validar el estado de autenticacion del User
-    const { status, checkAuthToken } = useAuthStore();
+    const { status, user, checkAuthToken } = useAuthStore();
+
+     // Obtenemos el estado auth del store
+  const {isAdmin, isAssistant} = useSelector((state) => state.auth); //,  isUser
+
+  const isAuthenticated = status === 'authenticated';
+  const userRoles = Array.isArray(user?.roles) ? user.roles : [];
+
+  const hasAdminAccess =
+        isAdmin || 
+        isAssistant || 
+        userRoles.includes('ROLE_ADMIN') || 
+        userRoles.includes('ROLE_ASSISTANT');
+
+  //const isOnlyUser = isUser || userRoles.includes('ROLE_USER');
+
 
     useEffect(() => {
         //Verifica el token del usuario al iniciar la app   
@@ -26,43 +43,41 @@ export const PrivateLayout = () => {
   }; 
 
     return(
-        <>
-
-         {/* Sidebar (encima) */}
-              {sidebarOpen && <SidebarAdmin toggleSidebar={toggleSidebar} />}
-        
-              {/* Botón flotante para abrir si está cerrado */}
-              {!sidebarOpen && (
-                <button
-                  onClick={toggleSidebar}
-                  className="btn position-fixed top-0 start-0 m-3"
-                  style={{ zIndex: 2000 }}
-                >
-                  <FaBars color="#4a148c" size="1.5em"  />
-                </button>
-              )}
-        
-              {/* Contenedor principal desplazable */}
-              <div
-                /* className="main-content" */
-                className="d-flex flex-column min-vh-100"
-                style={{
-                  marginLeft: sidebarOpen ? "250px" : "0", 
-                  transition: "margin-left 0.3s ease",
-        
-                 /*  display: "flex",
-                  flexDirection: "column",
-                  minHeight: "100vh", */
-                }}
+      <>
+        {isAuthenticated && hasAdminAccess ? ( //si esta autenticado y tiene role Admin o Assitant
+            <>
+            {sidebarOpen && <SidebarAdmin toggleSidebar={toggleSidebar} />}
+            
+            {!sidebarOpen && (
+              <button
+                onClick={toggleSidebar}
+                className="btn position-fixed top-0 start-0 m-3"
+                style={{ zIndex: 2000 }}
               >
-                <NavbarAdmin sidebarOpen={sidebarOpen} />
-
-
-        <Outlet />
-
-         </div>
-       <Footer />
-
-        </>
+                <FaBars color="#4a148c" size="1.5em" />
+              </button>
+            )}
+            
+            <div
+              className="d-flex flex-column min-vh-100"
+              style={{
+                marginLeft: sidebarOpen ? "250px" : "0",
+                transition: "margin-left 0.3s ease",
+              }}
+            >
+              <NavbarAdmin sidebarOpen={sidebarOpen} />
+              <Outlet />
+            </div>
+            <Footer />
+          </>
+        ) : (
+          <>
+            <NavbarApp/>
+              <Outlet />
+            <Footer />  
+          </>
+         
+      )}
+      </>
     )
 }

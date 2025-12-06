@@ -1,26 +1,49 @@
-import { AddCategoryButton } from "./product/AddCategoryButton";
 
+const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //version anterior recibe nombre Boton y func. onButtonClick por props
+  onAddClick,                 //botón principal 
+  buttonLabel = "Agregar nuevo", //texto del botón
+  showExport = true,          // mostrar u ocultar botón Exportar
+  placeholder = "Buscar",     // texto del input de búsqueda
+  onSearchChange,             // manejar búsqueda
+}) => {
 
-const TableToolbar = () => { //({ buttonLabel = "Add New", onButtonClick }) => { //version anterior recibe nombre Boton y func. onButtonClick por props
+  //el simbolo !! convierte una expresión en un valor booleano, sig. "no nulo" o "definido" entonces en hasSearch se verifica si se pasó la función onSearchChange
+   const hasSearch = !!onSearchChange; //verifica si se pasó la función onSearchChange
+
   return (
-    <div className="d-flex justify-content-between align-items-center mb-3">
-      <input
-        type="text"
-        className="form-control me-3 contorno-campo-morado contorno-campo-estatico"
-        placeholder="Buscar"
-        style={{ maxWidth: "300px" }}
-      />
-      <div>
-        <select className="form-select d-inline-block me-2" style={{ width: "auto" }}>
-          <option>10</option>
-          <option>25</option>
-          <option>50</option>
-        </select>
-        <button className="btn contorno-campo-estatico me-2">Export</button>
-        {/* <button className="btn btn-morado" onClick={onButtonClick} >+ {buttonLabel}</button> */}
-        <AddCategoryButton 
-            buttonLabel="Agregar"
+
+     <div 
+      className={`d-flex align-items-center mb-3 flex-wrap ${
+        hasSearch ? "justify-content-between" : "justify-content-end"
+      }`}
+    >
+      {/* Campo de búsqueda */}
+      {hasSearch && (
+        <input
+          type="text"
+          className="form-control me-3 contorno-campo-morado contorno-campo-estatico"
+          placeholder={placeholder}
+          style={{ maxWidth: "300px", flex: "1 1 auto" }}
+          onChange={onSearchChange}
         />
+      )}
+
+      {/* Botones de acción */}
+      <div className="d-flex gap-2 mt-2 mt-md-0">
+        {showExport && (
+          <button className="btn btn-blanco-morado">
+            Exportar
+          </button>
+        )}
+
+
+        {/* Solo se renderiza si se pasa una función */}
+        {onAddClick && (
+          <button className="btn btn-morado" onClick={onAddClick}>
+            + {buttonLabel}
+          </button>
+        )}
+
       </div>
     </div>
   );

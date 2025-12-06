@@ -2,9 +2,10 @@
 
 import ReactModal from "react-modal";
 import "./AddCategoryModal.css"; // Assuming you have a CSS file for styling
-import { useCategoryModal } from "../../../hooks/useCategoryModal";
-import { useCategory } from "../../../hooks/useCategory";
+import { useCategoryModal } from "../../../../hooks/useCategoryModal";
+import { useCategory } from "../../../../hooks/useCategory";
 import { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2";
 
 
   //Si es diferente del ambiente de 'test' se puede ejecutar la linea Modal.setAppElement esto xq en test no lo reconoce. 
@@ -31,7 +32,7 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
   const { isCategoryModalOpen, closeCategoryModal } = useCategoryModal();
 
   //se extrae propiedades y funciones desestructurando el hook useCategoryStore
-  const { categorySelected, startSavingCategory } = useCategory();
+  const { categorySelected, startSavingCategory, clearSelectedCategory } = useCategory();
 
   //Estado de validacion del Form cuando el usuario ha intentado enviar el form(false aun no se ha hecho el envio del form)
   const [formSubmitted, setFormSubmitted] = useState(false); //Se inicia en false
@@ -42,6 +43,9 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
       nombreCategoria:  '',
     }
   );
+
+  //Estado para detectar si hubo cambios en el form
+  const [hasChanges, setHasChanges] = useState(false);
 
   //UseMemo memoriza el valor de formValues.nombreCategoria y formSubmited ejecuta la funcion si cambia estos valores
   const titleClass = useMemo(() => {
@@ -58,6 +62,7 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
                 ...formValues, //se esparce todos los valores del Form(formValues) anteriores, para no sobreescribir(titulo, notes, start, end), solo sobreescribir el que tenga el valor del target.name
                 [target.name] : target.value   //a target.name se le agrega el nuevo valor target.value
             })
+            setHasChanges(true);
     }
 
 
@@ -67,15 +72,31 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
         setFormValues({ //establece los valores del form con los datos de la categoria seleccionada
           //nombreCategoria: categorySelected.nombreCategoria,
           ...categorySelected //los valores del form se carga con los dato de categoria seleccionada
-        });
-      }
+        })
+        setHasChanges(false);
+        } 
     }, [categorySelected]); //cuando cambie categorySelected se dispara el useEffect
 
     //Función que se ejecuta al cerrar el modal
-    const onCloseModal = () => {
-      document.activeElement?.blur(); // Evita el warning de accesibilidad
-      closeCategoryModal(); //cierra el modal
-    };
+    const onCloseModal = async() => {
+      if (hasChanges) {
+      const result = await Swal.fire({
+        title: '¿Descartar cambios?',
+        text: 'Tienes cambios sin guardar, ¿deseas salir sin guardar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, salir',
+        cancelButtonText: 'No, continuar editando',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+      });
+
+      if (!result.isConfirmed) return; // no cerrar si el usuario cancela
+    }
+
+    document.activeElement?.blur(); // Evita el warning de accesibilidad
+    closeCategoryModal(); // cerrar modal solo si confirmó
+  };
 
     //Función que se ejecuta al enviar el form
     const onSubmit = async( event ) => {
@@ -83,7 +104,7 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
       setFormSubmitted(true); //se hizo el intento de enviar el form
 
       //Validación del Form
-      if( formValues.nombreCategoria.length === 0 ) return; //si el nombreCategoria esta vacio no hace nada
+      if( formValues.nombreCategoria.trim().length === 0 ) return; //si el nombreCategoria esta vacio no hace nada
 
       //si el formulario esta lleno sus campos
       //console.log(formValues);
@@ -91,9 +112,11 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
       
       document.activeElement?.blur(); //Evita el warning de accesibilidad
       closeCategoryModal(); //cierra el modal
-
+      //clearSelectedCategory();
       //Reset Validacion si el usuario ha intentado enviar el form es false
       setFormSubmitted(false);
+      setHasChanges(false);
+      
     };
     
   return (
@@ -111,7 +134,8 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
     >
 
     {/* Contenido a mostrar en el modal */}
-        <h1> Nueva categoria </h1>
+        {/* <h1>{categorySelected ? "Editar categoría" : "Nueva categoría"}</h1> */}
+        <h1>{formValues.id ? 'Editar categoría' : 'Nueva categoría'}</h1>
         <hr />
 
             <form
@@ -132,7 +156,7 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
               onChange={onInputChanged} //Para establecer los nuevos valores que el User agregue al Form
 
             />
-            <small id="emailHelp" className="form-text text-muted">
+            <small className="form-text text-muted">
               Una descripción corta
             </small>
           </div>
@@ -146,9 +170,11 @@ const AddCategoryModal = () => {    //= ({ show, onClose }) => { //version anter
               <span> Guardar</span>
             </button>
             <button 
+                type="button"  //esto evita que ejecute onSubmit
                 className="btn btn-outline-danger" 
                 onClick={onCloseModal}>
-              <i className="fa-solid fa-trash-list"></i>
+              {/* <i className="fa-solid fa-trash-list"></i> */}
+              <i className="fa-solid fa-xmark"></i>
               <span>Cancelar</span>
             </button>
           </div>
