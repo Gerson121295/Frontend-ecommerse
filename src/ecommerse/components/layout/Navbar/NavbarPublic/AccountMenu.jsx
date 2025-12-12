@@ -1,6 +1,6 @@
 
 
-import { Link, Navigate, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../../../hooks/useAuthStore";
 
 export const AccountMenu = ({
@@ -8,12 +8,15 @@ export const AccountMenu = ({
   hasAdminAccess,
 }) => {
 
+   const navigate = useNavigate(); //obtener la navegacion
+
    //Extrae propiedades y funciones de hooks
     const { startLogout } = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
     
   const onLogout = () => {
     startLogout(); //llama la funcion startLogout del hook useAuthStore 
-    Navigate('/auth/login'); //navega a la pagina de login
+    //Navigate('/auth/login'); //navega a la pagina de login
+    navigate('/auth/login');  //navega a la pagina de login
   };
 
   

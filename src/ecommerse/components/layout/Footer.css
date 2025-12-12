@@ -4,6 +4,10 @@
   color: #ffffff;
   padding: 40px 20px;
   font-family: sans-serif;
+   
+  /* Para poner el footer por encima del sidebar */
+  position: relative;
+  z-index: 2000;  
 }
 
 .footer-container {
@@ -15,6 +19,7 @@
   gap: 30px;
 
   text-align: center; /* mobile */
+  
 }
 
 .footer-section {

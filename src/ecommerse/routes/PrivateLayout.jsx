@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom"
 import { Footer, SidebarAdmin } from "../components/layout";
-import { FaBars } from "react-icons/fa";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { NavbarAdmin } from "../components/layout/Navbar/NavbarAdmin";
 import { NavbarApp } from "../components/layout/Navbar/NavbarPublic";
 import { useSelector } from "react-redux";
+import '../components/layout/SidebarAdmin.css'
+
 
 export const PrivateLayout = () => {
 
@@ -38,38 +39,26 @@ export const PrivateLayout = () => {
     if(status === 'not-authenticated') return <Navigate to="/auth/login" />; //si el usuario no esta autenticado redirige a la ruta de login
 
     //Función para alternar la visibilidad del sidebar
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  }; 
+  const toggleSidebar = () => { setSidebarOpen(!sidebarOpen)}; 
 
     return(
       <>
         {isAuthenticated && hasAdminAccess ? ( //si esta autenticado y tiene role Admin o Assitant
-            <>
-            {sidebarOpen && <SidebarAdmin toggleSidebar={toggleSidebar} />}
-            
-            {!sidebarOpen && (
-              <button
-                onClick={toggleSidebar}
-                className="btn position-fixed top-0 start-0 m-3"
-                style={{ zIndex: 2000 }}
-              >
-                <FaBars color="#4a148c" size="1.5em" />
-              </button>
-            )}
-            
+        <>
+            <SidebarAdmin sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
             <div
               className="d-flex flex-column min-vh-100"
               style={{
-                marginLeft: sidebarOpen ? "250px" : "0",
-                transition: "margin-left 0.3s ease",
+                marginLeft: sidebarOpen ? "200px" : "0", //"260px" : "0",
+                transition: "margin-left 0.3s ease"
               }}
             >
-              <NavbarAdmin sidebarOpen={sidebarOpen} />
+              <NavbarAdmin sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
               <Outlet />
             </div>
-            <Footer />
-          </>
+            <Footer /> 
+        </>
         ) : (
           <>
             <NavbarApp/>

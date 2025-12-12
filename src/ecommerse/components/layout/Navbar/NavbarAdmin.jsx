@@ -1,18 +1,17 @@
 
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaBars } from 'react-icons/fa';
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../../hooks/useAuthStore';
+import './NavbarAdmin.css';
 
-export const NavbarAdmin = ({ sidebarOpen }) => {
+export const NavbarAdmin = ({ sidebarOpen, toggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const dropdownRef = useRef();
+  const navigate = useNavigate();
+  const { user, startLogout } = useAuthStore();
 
-  const navigate = useNavigate(); //obtener la navegacion
-  const {user, startLogout} = useAuthStore(); //extrae la funcion startLogout del hook useAuthStore
-
-
-  // Cerrar el menú si se hace clic fuera
+  // Cerrar menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -23,86 +22,60 @@ export const NavbarAdmin = ({ sidebarOpen }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-
-   const onLogout = () => {
-    startLogout(); //llama la funcion startLogout del hook useAuthStore 
-    navigate('/auth/login'); //navega a la pagina de login
+  const onLogout = () => {
+    startLogout();
+    navigate('/auth/login');
   };
 
   return (
-    <nav
-        className="navbar bg-white shadow-sm px-4 position-sticky top-0"
-        style={{
-        height: '64px',
-        zIndex: 1020,
-  }}
+   /*  <nav className="navbar-admin shadow-sm px-3"> 
+     <div className="container-fluid d-flex justify-content-between align-items-center">  */
+      
+     <nav className={`navbar-admin shadow-sm px-3 ${sidebarOpen ? "sidebar-open" : ""}`}>
+      
+      <div className="container-fluid navbar-layout">
+      {/* Área izquierda (botón hamburguesa o espacio vacío) */}
+      <div className="navbar-left">
+        {/* Botón Hamburguesa (oculto cuando sidebarOpen = true) */}
+        {!sidebarOpen && (
+          <button className="btn-menu" onClick={toggleSidebar}>
+            <FaBars size="1.4em" />
+          </button>
+        )}
+      </div>
 
-    >
-      <div className="container-fluid d-flex justify-content-between align-items-center">
-        <div className="flex-grow-1 d-flex justify-content-center">
-          <h4
-            className="fw-bold mb-0"
-            style={{
-              color: '#4a148c',
-              transition: 'margin 0.3s ease',
-            }}
-          >
-            Panel de Administracion
-          </h4>
-        </div>
+        {/* Título centrado */}
+        <h4 
+          //className="navbar-title mb-0"
+          className={` ${sidebarOpen ? "navbar-title mb-0" : "navbar-title2 mb-0"}`}
+        >Administración</h4>
 
         {/* Usuario */}
-        <div className="d-flex align-items-center position-relative" ref={dropdownRef}>
+        <div className="navbar-right" ref={dropdownRef}>
           <div
-            className="d-flex align-items-center cursor-pointer"
+            className="navbar-user-wrapper"
             onClick={() => setOpenMenu(!openMenu)}
-            style={{ cursor: 'pointer' }}
           >
-           {/*  <img
-              src="/src/assets/img/productos/abarrotes/Arroz Blanco La Cosecha.png"
-              alt="User avatar"
-              className="rounded-circle me-2"
-              width="40"
-              height="40"
-            /> */}
-            <div className="d-none d-md-block text-start">
-              <div className="fw-semibold">{user.username}</div>
-              {/* <small className="text-muted">{user.roles}</small> */}
-            </div>
+            <FaUserCircle className="navbar-user-icon" />
+            <span className="navbar-user-name">{user.username}</span>
           </div>
 
-          {openMenu && (
-            <div
-              className="dropdown-menu show"
-              style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                marginTop: '0.5rem',
-                zIndex:'6000'
-              }}
-            >
-              <button className="dropdown-item">
-                <FaUserCircle className="me-2" />
-                My Profile
-              </button>
-              <NavLink to="/" className="dropdown-item">
-                  Home
-              </NavLink>
-              <button
-                className="dropdown-item text-danger"
-                onClick={onLogout}
-                style={{ cursor: "pointer" }}
-              >
-                Salir
-              </button>            
-            </div>
-          )}
+          {/* Dropdown */}
+          <div className={`navbar-dropdown ${openMenu ? "open" : ""}`}>
+            <button className="dropdown-item">
+              <FaUserCircle className="me-2" /> Mi Perfil
+            </button>
+
+            <NavLink to="/" className="dropdown-item">Home</NavLink>
+
+            <button className="dropdown-item text-danger" onClick={onLogout}>
+              Salir
+            </button>
+          </div>
         </div>
       </div>
     </nav>
   );
 };
-
 
 

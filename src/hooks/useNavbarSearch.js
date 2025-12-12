@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "./useProduct";
 import { useDispatch } from "react-redux";
+import { onError, onLoadProducts } from "../store/product/productSlice";
 
 export const useNavbarSearch = () => {
     const navigate = useNavigate();
@@ -16,24 +17,28 @@ export const useNavbarSearch = () => {
     const [results, setResults] = useState([]); // Guarda resultados de búsqueda
     const [isFocused, setIsFocused] = useState(false); // Maneja el foco del input de búsqueda
 
-    const { startGetProductByName } = useProduct(dispatch);
+    const { startGetProductByName, startLoadingActiveProducts } = useProduct(dispatch);
+
+    useEffect(() => {
+      startLoadingActiveProducts();
+    },[])
 
   // Buscar productos mientras escribe (auto-sugerencias)
   useEffect(() => {
     const fetchResults = async () => {
       if (searchText.trim() === "") {
-        //dispatch(onLoadProducts([])); // Limpia productos en el store si el texto de búsqueda está vacío
+        dispatch(onLoadProducts([])); // Limpia productos en el store si el texto de búsqueda está vacío
         setResults([]); // Limpia resultados si el texto de búsqueda está vacío
         return;
       }
 
       try {
         const {data} = await startGetProductByName(searchText);
-        //dispatch(onLoadProducts(data)); // Actualiza el store con los productos obtenidos 
+        dispatch(onLoadProducts(data)); // Actualiza el store con los productos obtenidos 
         setResults(Array.isArray(data) ? data : []); // Actualiza resultados de búsqueda
       } catch(error) {
         console.error(error);
-        //dispatch(onError('Error al cargar productos'));
+        dispatch(onError('Error al cargar productos'));
       }
     };
 
@@ -56,7 +61,7 @@ export const useNavbarSearch = () => {
       navigate(`/search?query=${encodeURIComponent(q)}`); 
       setIsFocused(false);
       setResults([]); //limpia los resultados de busqueda
-      //dispatch(onLoadProducts([])); // Limpia productos en el store si el texto de búsqueda está vacío
+      dispatch(onLoadProducts([])); // Limpia productos en el store si el texto de búsqueda está vacío
     };
   };
 

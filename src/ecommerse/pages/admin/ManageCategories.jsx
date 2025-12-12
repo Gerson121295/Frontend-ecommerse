@@ -6,6 +6,8 @@ import AddCategoryModal from "../../components/common/category/AddCategoryModal"
 import { useCategory } from "../../../hooks/useCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { useCategoryModal } from "../../../hooks/useCategoryModal";
+import { DeleteCategoryButton } from "../../components/common/category/DeleteCategoryButton";
+import { EditCategoryButton } from "../../components/common/category/EditCategoryButton";
 
 export const ManageCategories = () => {
 
@@ -70,7 +72,19 @@ export const ManageCategories = () => {
       <DataTable 
         columns={columns} 
         data={categoriesDB} 
-        type="category" 
+        //type="category" 
+
+        renderRow={(item) => (
+           <>
+              <td>
+                <div className="fw-bold">{item.nombreCategoria}</div>
+              </td>
+              <td> 
+                <DeleteCategoryButton category={item} /> 
+                <EditCategoryButton category={item} /> 
+              </td>
+            </>
+        )}
 
         onSelect={onSelect}
         onDoubleClick={onDoubleClick}
@@ -78,7 +92,7 @@ export const ManageCategories = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={onPageChange}
-        categorySelected={categorySelected}
+        itemSelected={categorySelected}
 
       />
 

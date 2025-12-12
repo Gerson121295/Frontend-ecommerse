@@ -60,13 +60,37 @@ const initialState = {
             
             // Guarda los datos en memoria del frontend (en store Redux)
             onLoadProducts: (state, {payload}) => {
-                state.products = payload.content || payload; // Soporta Page y List
+                /* state.products = payload.content || payload; // Soporta Page y List
                 
                 state.currentPage = payload.number 
                 state.totalPages = payload.totalPages || 0;
                 state.totalElements = payload.totalElements || 0;
                 state.sizePagination = payload.size || 10
-                state.isLoading = false; //finaliza el estado de carga
+                state.isLoading = false; //finaliza el estado de carga */
+
+                // Si payload no existe, fallback seguro
+                    if (!payload) {
+                        state.products = [];
+                        state.currentPage = 0;
+                        state.totalPages = 1;
+                        state.totalElements = 0;
+                        state.sizePagination = 10;
+                        state.isLoading = false;
+                        return;
+                    }
+
+                    const isPage = Array.isArray(payload.content);
+                    const products = isPage ? payload.content : payload;
+
+                    // fallback si products viene null o undefined
+                    const safeProducts = Array.isArray(products) ? products : [];
+
+                    state.products = safeProducts;
+                    state.currentPage = isPage ? payload.number : 0;
+                    state.totalPages = isPage ? payload.totalPages : 1;
+                    state.totalElements = isPage ? payload.totalElements : safeProducts.length;
+                    state.sizePagination = isPage ? payload.size : safeProducts.length;
+                    state.isLoading = false;
             },
 
             //Limpia el producto seleccionado

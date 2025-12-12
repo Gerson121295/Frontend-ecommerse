@@ -1,5 +1,6 @@
+import '../../../../src/styles.css'
 
-const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //version anterior recibe nombre Boton y func. onButtonClick por props
+/* const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //version anterior recibe nombre Boton y func. onButtonClick por props
   onAddClick,                 //botón principal 
   buttonLabel = "Agregar nuevo", //texto del botón
   showExport = true,          // mostrar u ocultar botón Exportar
@@ -8,7 +9,7 @@ const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //v
 }) => {
 
   //el simbolo !! convierte una expresión en un valor booleano, sig. "no nulo" o "definido" entonces en hasSearch se verifica si se pasó la función onSearchChange
-   const hasSearch = !!onSearchChange; //verifica si se pasó la función onSearchChange
+  const hasSearch = !!onSearchChange; //verifica si se pasó la función onSearchChange
 
   return (
 
@@ -17,7 +18,7 @@ const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //v
         hasSearch ? "justify-content-between" : "justify-content-end"
       }`}
     >
-      {/* Campo de búsqueda */}
+
       {hasSearch && (
         <input
           type="text"
@@ -28,7 +29,6 @@ const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //v
         />
       )}
 
-      {/* Botones de acción */}
       <div className="d-flex gap-2 mt-2 mt-md-0">
         {showExport && (
           <button className="btn btn-blanco-morado">
@@ -36,8 +36,6 @@ const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //v
           </button>
         )}
 
-
-        {/* Solo se renderiza si se pasa una función */}
         {onAddClick && (
           <button className="btn btn-morado" onClick={onAddClick}>
             + {buttonLabel}
@@ -45,6 +43,36 @@ const TableToolbar = ({  //({ buttonLabel = "Add New", onButtonClick }) => { //v
         )}
 
       </div>
+    </div>
+  );
+}; */
+
+const TableToolbar = ({
+  customSearch,
+  onAddClick,
+  buttonLabel = "Agregar nuevo",
+  showExport = true,
+}) => {
+  return (
+    <div className="d-flex align-items-center mb-3 flex-wrap justify-content-between">
+
+      <div style={{ maxWidth: "320px", flex: "1 1 auto" }}>
+        {customSearch}
+      </div>
+
+      <div className="d-flex gap-2 mt-2 mt-md-0">
+        {showExport && <button className="btn btn-blanco-morado">Exportar</button>}
+        {onAddClick && (
+          <button 
+            className="btn btn-morado"
+            onClick={onAddClick}
+          >
+            + 
+            {buttonLabel}
+          </button>
+        )}
+      </div>
+
     </div>
   );
 };

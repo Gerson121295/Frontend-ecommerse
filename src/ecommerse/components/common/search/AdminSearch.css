@@ -1,0 +1,102 @@
+
+/* CONTENEDOR */
+.admin-search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ESTADO NORMAL */
+.admin-search-input {
+  background: #ffffff;                 /* fondo blanco sin focus */
+  border: 2px solid #6a1b9a;          /* morado */
+  color: #6a1b9a;                     /* texto morado */
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+/* PLACEHOLDER NORMAL */
+.admin-search-input::placeholder {
+  color: #6a1b9a;                     /* placeholder morado */
+  opacity: 0.75;
+}
+
+/* 🟣 ESTADO ENFOCADO / ESCRIBIENDO */
+.admin-search-input:focus {
+  background: #4a0c73;                /* morado oscuro */
+  border-color: #8b32c8;              /* morado más brillante */
+  color: #ffffff;                     /* texto blanco */
+  outline: none;
+}
+
+/* PLACEHOLDER EN FOCUS */
+.admin-search-input:focus::placeholder {
+  color: #ffffff;                    /* placeholder blanco */
+  opacity: 0.8;
+}
+
+/* DROPDOWN */
+.admin-search-dropdown {
+  position: absolute;
+  width: 100%;
+  top: 52px;
+  left: 0;
+  background: #4a0c73;
+  border-radius: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+  z-index: 20;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 2px solid #6a1b9a;
+}
+
+/* ITEMS */
+.admin-search-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: white;
+}
+
+.admin-search-item:hover {
+  background: #360952; /* más oscuro */
+}
+
+/* TEXTO RESULTADOS */
+.admin-search-title {
+  font-weight: bold;
+  color: #fff;
+}
+
+.admin-search-subtitle {
+  font-size: 13px;
+  color: #e4d6f5; /* gris-morado claro */
+}
+
+/* THUMB RESULTADO */
+.admin-search-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .admin-search-wrapper {
+    max-width: 100%;
+  }
+
+  .admin-search-input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .admin-search-dropdown {
+    max-height: 220px;
+  }
+}

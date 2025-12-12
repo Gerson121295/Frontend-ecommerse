@@ -36,20 +36,20 @@ export const usePedido = () => {
             //const successMessage = data?.message || 'Pedido realizado exitosamente.';
             //showNotification(`Pedido creado. Número de seguimiento: ${data.numeroSeguimientoPedido}`, "success");
             //Notificacion alert reutilizable
-          /*   showNotification(
+           showNotification(
                 'success',
                 'Pedido creado exitosamente',
                 //successMessage ||'Los cambios se guardaron correctamente.',
-                `Número de seguimiento: ${data.numeroSeguimientoPedido}`,
+                `Número de seguimiento del pedido: ${data.numeroSeguimientoPedido}`,
                 {
                     customClass: 'toast-corporate',
                     timer: 5000,
                 },                 
-            ); */
-            showNotification(
+            ); 
+/*             showNotification(
                 "success",
                 `Pedido creado. Número de seguimiento: ${data.numeroSeguimientoPedido}`,
-            )
+            ) */
        
             return { success: true, numeroSeguimientoPedido: data.numeroSeguimientoPedido};
         } catch (error) {
@@ -107,25 +107,27 @@ export const usePedido = () => {
     }
 
     //Buscar por nombre de usuario
-    const startSearchingByUser = async (nombreUsuario, pageNumber) => {
+    const startSearchingByUser = async (nombreUsuario, pageNumber, sizePagination) => {
         dispatch(onSetLoading());
 
         try {
-            const { data } = await pedidoService.buscarPorNombreUsuario(nombreUsuario, pageNumber);
+            const { data } = await pedidoService.buscarPorNombreUsuario(nombreUsuario, pageNumber, sizePagination);
             
             //F2-Formatear las fechas de creación antes de guardar
-            const formattedDataorder = {
-                ...data, //pasa toda la data(copia)
+            const formattedDataorder = data.content.map( pedido => ({
+                ...pedido, //espace toda la data de pedido
+                fechaCreacion: formatDate(pedido.fechaCreacion), //modifica el campo de fecha creacion del pedido con el formato
+                
+            }));
+                
+            dispatch(onLoadOrders({
+                ...data,
+                content: formattedDataorder
+            }));
 
-                //Modifica el content
-                content: data.content.map(pedido => ({
-                    ...pedido, //espace toda la data de pedido
-                    fechaCreacion: formatDate(pedido.fechaCreacion), //modifica el campo de fecha creacion del pedido con el formato
-                })),
-            };
+            // Retornar el arreglo - importante para fetchSuggestions
+            return formattedDataorder;
 
-            //Se pasa completo la ...data el reducer los asigna - Mas profesional
-            dispatch(onLoadOrders(formattedDataorder));
         } catch (error) {
             console.error(error);
             const message = error.response?.data?.error || 'Error al Buscar pedido por usuario';
@@ -134,6 +136,34 @@ export const usePedido = () => {
         }
     }
 
+    //Obtiene los pedidos del usuario autenticado
+    const startgetUserOrders = async(pageNumber, sizePagination) => {
+        dispatch(onSetLoading());
+
+        try {
+            const { data } = await pedidoService.obtenerMisPedidos(pageNumber, sizePagination);
+
+            //Formatear la fecha de creacion
+            const formattedDataorder = data.content.map( pedido => ({
+                ...pedido, 
+                fechaCreacion: formatDate(pedido.fechaCreacion),
+            }));
+
+            dispatch(onLoadOrders({
+                ...data,
+                content: formattedDataorder
+            }));
+
+            return formattedDataorder;
+
+        } catch (error) {
+            const message = error.response?.data?.error || 'Error al listar sus pedidos';
+            dispatch(onError(message));
+            return [];
+        }
+    }
+
+    
     // Buscar por número de seguimiento
     const startSearchingByTrackingNumber = async (numero) => {
 
@@ -143,12 +173,31 @@ export const usePedido = () => {
               const { data } = await pedidoService.buscarPorNumeroSeguimiento(numero);
 
               //F3-Pasar toda la data y modificar la fecha de creacion al enviar
-                dispatch(onSetOrderSelected(
+/*        dispatch(onSetOrderSelected(
                     {
                         ...data,
                         fechaCreacion: formatDate(data.fechaCreacion)
                     }
-                ));
+                ));   */
+
+             const formattedDataorder = {
+                ...data, //pasa toda la data(copia)
+                fechaCreacion: formatDate(data.fechaCreacion), //modifica el campo de fecha creacion del pedido con el formato
+            }; 
+
+             // Se pasa como pagina con 1 registro ya que buscarPorNumeroSeguimiento no es paginacion y solo retorna 1 elemento y onLoaderOrders si es paginacion
+                dispatch(onLoadOrders({
+                content: [formattedDataorder],
+                number: 0,
+                totalPages: 1,
+                totalElements: 1,
+                size: 10
+                }));
+
+            dispatch(onSetOrderSelected(formattedDataorder)); //setea el pedido como seleccionado
+
+            //Se pasa completo la ...data el reducer los asigna 
+            //dispatch(onLoadOrders([formattedDataorder])); //Se encierra entre parentesis, como no es paginacion y solo devuelve 1 objeto 
 
         } catch (error) {
             console.error(error);
@@ -188,17 +237,18 @@ export const usePedido = () => {
             //Extrae el mensaje del backend si existe, o usa uno por defecto
             const successMessage = data?.mensaje || 'Pedido eliminado correctamente.';
             dispatch(onDeleteOrder(id));
-
+ 
             showNotification(
                 'success',
-                'Producto Eliminado',
+                'Pedido Eliminado',
                 successMessage || 'Se ha eliminado correctamente.',
                 {
                     timer: 2500,
                     onClose: () => startLoadingOrders(pageNumber),
                     customClass: 'toast-corporate',
                 }                
-            )
+            ) 
+
         } catch (error) {
             console.error(error);
             const message = error.response?.data?.error || 'Error al eliminar el pedido';
@@ -232,6 +282,7 @@ export const usePedido = () => {
         setOrderSelected,
         startSavingOrder,
         startLoadingOrders,
+        startgetUserOrders,
         startSearchingByUser,
         startSearchingByTrackingNumber,
         startSearchOrderById,

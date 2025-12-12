@@ -49,7 +49,7 @@ const customStyles = {
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.55)',
-    zIndex: 1050,
+    zIndex: 1350,
     backdropFilter: 'blur(3px)', //Funcion de opacar la pantalla para que resalte el modal
   }
 };

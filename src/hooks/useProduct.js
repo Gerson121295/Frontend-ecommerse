@@ -60,8 +60,8 @@ export const useProduct = () => {
           content: data.content.map(product => ({ //accede a la data y recorre cada uno
           ...product, //esparce toda los campos de productos
           fechaCreacion: formatDate(product.fechaCreacion), //modifica el campo fechaCreacion
-      })),
-    };
+          })),
+        };
 
         dispatch(onLoadProducts(formattedData));
             //dispatch(onLoadProducts(data)); //dispatch action to set products in Redux store
@@ -198,11 +198,13 @@ export const useProduct = () => {
       });
       
       dispatch(onLoadProducts(data));
-      return true;
+      //return true;
+       return data.content; 
 
     } catch (error) {
         const message = error.response?.data?.error || 'Error al buscar producto por nombre';
         dispatch(onError(message));
+        return [];
     }
   };
 
@@ -226,20 +228,31 @@ export const useProduct = () => {
   };
 
   // Listar productos activos
-  const startLoadingActiveProducts = async (page = 0, size = sizePagination) => {
+  const startLoadingActiveProducts = async (page = 0, size = sizePagination || 10) => {
     dispatch(onSetLoading(true));
     try {
       //const {data} = await ecommerceApi.get(`/productos/listarActivos?page=${page}&size=${size}`); 
       const { data } = await ecommerseApi.get('/productos/listarActivos', {
-        params: { page, size },
+        params: { page, size},
       });
-      dispatch(onLoadProducts(data));
-      return true;
 
+         //Formatear las fechas de creación antes de guardar
+        const formattedData = {
+          ...data, //pasa toda la data de producto(una copia)
+           //Modifica el content
+          content: data.content.map(product => ({ //accede a la data y recorre cada uno
+          ...product, //esparce toda los campos de productos
+          fechaCreacion: formatDate(product.fechaCreacion), //modifica el campo fechaCreacion
+          })),
+        };
+
+        dispatch(onLoadProducts(formattedData));
+
+      //return data; //true
     } catch (error) {
         const message = error.response?.data?.error || 'Error al listar productos activos';
         dispatch(onError(message));
-        return false;
+        //return []; //false;
     }
   };
 

@@ -1,5 +1,5 @@
 
-import { Link, Navigate} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import './NavbarApp.css';
 import { useNavbarSearch } from '../../../../../hooks/useNavbarSearch';
 import { DesktopNavbar } from './DesktopNavbar';
@@ -15,7 +15,7 @@ export const NavbarApp = () => {  // ({ categories, userData }) => {
   const { categories, startLoadingAllCategories  } = useCategory();
 
   // Obtenemos el estado auth del store
-  const {status, user, isAdmin, isAssistant,  isUser} = useSelector((state) => state.auth);
+  const {status, user, isAdmin, isAssistant, isUser} = useSelector((state) => state.auth);
 
   const isAuthenticated = status === 'authenticated';
   const userRoles = Array.isArray(user?.roles) ? user.roles : [];

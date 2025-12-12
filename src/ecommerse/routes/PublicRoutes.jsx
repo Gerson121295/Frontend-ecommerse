@@ -22,11 +22,7 @@ export const PublicRoutes = [
         path: "/checkout",
         element: <Checkout />,
     }, */
-
-    {
-        path: "/orders",
-        element: <Orders />,
-    }, 
+ 
     {
         path: "/productos/:id", // Asumiendo que mostrarás producto por ID
         element: <InfoProduct />,
@@ -43,6 +39,12 @@ export const PublicRoutes = [
         path: "/cart",
         element: <ShoppingCart />,
     },
+
+    {
+        path: "/orders",
+        element: <Orders />,
+    },
+
      { //SI entro a esta ruta EcommerseRoutes y no estoy dentro del / cualquier otra ruta va a redirigir al /
         path: "*", //Si se coloca un "/" o  "*" en una ruta, quiere decir que redirige a /
         element: <Navigate to={"/"} />

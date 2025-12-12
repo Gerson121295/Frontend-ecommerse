@@ -1,16 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
 import DataTable from "../../components/common/DataTable";
-import TableToolbar from "../../components/common/TableToolbar";
 import { useProduct } from "../../../hooks/useProduct";
 import { useEffect } from "react";
 import { useProductModal } from "../../../hooks/useProductModal";
 import { AddProductModal } from "../../components/common/product/AddProductModal";
+import { getEnvVariables } from "../../../helpers/getEnvVariables";
+import { DeleteProductButton } from "../../components/common/product/DeleteProductButton";
+import { EditProductButton } from "../../components/common/product/EditProductButton";
+import { AdminSearchBar } from "../../components/common/search/AdminSearchBar";
+import TableToolbar from "../../components/common/TableToolbar";
 
+//extrae la ruta principal para las peticions desde .env  variables de entorno
+const { VITE_API_URL } = getEnvVariables();
 
 export const ManageProducts = () => {
 
   const dispatch = useDispatch();
-  const {startLoadingProductspaginated, setProductSelected, clearProductSelected } = useProduct(dispatch);
+  const {startLoadingProductspaginated, setProductSelected, 
+    clearProductSelected, startSearchByName } = useProduct(dispatch);
 
   //Se extrae propiedades y funciones desestructurando el hook useProductModal()
   const { openProductModal } = useProductModal();
@@ -68,14 +75,34 @@ export const ManageProducts = () => {
     startLoadingProductspaginated(newPage, sizePagination);
   }
 
-  /*
-  image_url, nombre, descripcion, 
-  categoria_id, activa,  
-  codigo_referencia,
-  id,  precio_unitario,
-  unidades_en_stock, 
-  fecha_creacion, ultima_actualizacion,
-*/
+  //Funcion para busqueda de productos - Admin
+  const fetchSuggestions = async(query) => {
+
+  if (!query || query.trim().length === 0 || query === "") {
+    startLoadingProductspaginated(0, sizePagination); //carga inicial
+    return [];
+  }
+
+  //Guarda el dato de resultado en productsByName
+  const productsByName = startSearchByName(query, 0, sizePagination);
+
+ /*  return productsByName.map((product ) => ({
+     id: product.id,
+      label: product.nombre,
+      subtitle: `Categoría: ${product.categoria}`,
+      imageUrl:  product.imageUrl,
+  })) */
+
+      //recorre products ya que startSearchByName guarda el resultado en onLoadProducts 
+      return products.map((product ) => ({
+        id: product.id,
+          label: product.nombre,
+          subtitle: `Categoría: ${product.categoria}`,
+          imageUrl: product.imageUrl,
+      }))
+
+  }
+
 
   const columns = [
      "Producto", "Categoria", "Estado",
@@ -84,11 +111,27 @@ export const ManageProducts = () => {
 
   return (
     <div className="container-fluid px-4 py-4">
-      <TableToolbar 
+    {/*   <TableToolbar 
         onAddClick={handleClicNewProduct}
         buttonLabel="Add Product" 
         placeholder="Buscar Producto"
-      />
+      /> */}
+
+         <TableToolbar 
+          placeholder="Buscar producto..."
+          customSearch={(
+            <AdminSearchBar
+              placeholder="Buscar por nombre o categoria"
+              fetchSuggestions={fetchSuggestions}
+              onSelectSuggestion={(item) => {
+              startSearchByName(item.label); // filtra por nombre
+                }}
+              />
+            )}
+          onAddClick={handleClicNewProduct}
+          buttonLabel="Add Product" 
+        />
+
 
       {isLoading ? (
         <div className="text-center py-5">Loading products...</div>
@@ -96,7 +139,49 @@ export const ManageProducts = () => {
         <DataTable 
           columns={columns} 
           data={products} 
-          type="product" 
+          
+          renderRow={(item) => (
+            <>
+              <td>
+                <div className="d-flex align-items-center">
+                  <img
+                    src={VITE_API_URL + item.imageUrl}
+                    alt={item.nombre}
+                    className="rounded me-2"
+                    width={40}
+                    height={40}
+                  />
+                  <div>
+                    <div className="fw-bold">{item.nombre}</div>
+                    <small className="text-muted">{item.descripcion}</small>
+                  </div>
+                </div>
+              </td>
+              <td><span className="badge bg btn-morado">{item.categoria}</span></td>
+              <td>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    defaultChecked={item.activa}
+                  />
+                </div>
+              </td>
+              <td>{item.codigoReferencia}</td>
+              <td>{item.precioUnitario}</td>
+              <td>{item.unidadesEnStock}</td>
+              <td>{item.fechaCreacion}</td>
+            {/*  <td>
+                <span className={`badge ${item.activa === "Active" ? "bg-success" : "bg-secondary"}`}>
+                  {item.activa}
+                </span>
+              </td> */}
+              <td>
+                <DeleteProductButton product={item} /> 
+                <EditProductButton product={item} /> 
+              </td>
+            </>
+          )}
 
           onSelect={onSelect}
           onDoubleClick={onDoubleClick}
@@ -106,7 +191,7 @@ export const ManageProducts = () => {
           totalElements={totalElements}
           onPageChange={onPageChange}
 
-          productSelected={productSelected}
+          itemSelected={productSelected}
         />
       )}
 

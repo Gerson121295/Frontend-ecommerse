@@ -160,6 +160,7 @@ export const Checkout = () => {
     if (success) {
       //navigate(`/order/success/${numeroSeguimientoPedido}`);
       navigate('/orders');
+      //navigate('/admin/orders');
       clearAfterOrder(); //limpiar el formulario y el carrito
     }
   };

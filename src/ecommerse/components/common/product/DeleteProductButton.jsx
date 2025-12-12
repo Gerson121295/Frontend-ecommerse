@@ -1,9 +1,7 @@
 
-import Swal from "sweetalert2";
 import { ShowConfirmDialog } from "../../../../helpers/showConfirmDialog";
 import { useProduct } from "../../../../hooks/useProduct"
 import TableActions from "../TableActions";
-
 
 export const DeleteProductButton = ({ product }) => {
 

@@ -1,0 +1,160 @@
+
+/******************************************
+ * CONTENEDOR GENERAL
+ ******************************************/
+.datatable-container {
+  width: 100%;
+  margin: 20px 0;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+/******************************************
+ * TABLA BASE
+ ******************************************/
+.datatable-wrapper {
+  overflow-x: auto;
+}
+
+.datatable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+.datatable thead {
+  background: #f5f2fa;
+}
+
+.datatable th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #5d3e71;
+  border-bottom: 2px solid #e4d9ef;
+  white-space: nowrap;
+}
+
+.datatable td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #444;
+}
+
+/******************************************
+ * FILAS — HOVER ESTÉTICO
+ ******************************************/
+.datatable-row {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.datatable-row:hover {
+  background: #faf7ff;
+  transform: scale(1.01);
+}
+
+/******************************************
+ * NO DATA
+ ******************************************/
+.no-data {
+  text-align: center !important;
+  padding: 20px 0 !important;
+  color: #777;
+  font-style: italic;
+}
+
+/******************************************
+ * PAGINACIÓN
+ ******************************************/
+.datatable-pagination {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 14px;
+}
+
+/******************************************
+ * BOTONES DE PAGINACIÓN
+ ******************************************/
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.page-btn {
+  background: white;
+  border: 1px solid #c9a6df;
+  color: #6c3483;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.page-btn:hover {
+  background: #6c3483;
+  color: white;
+}
+
+.page-btn.active {
+  background: #6c3483;
+  color: white;
+  font-weight: bold;
+}
+
+.page-btn:disabled {
+  background: #eee;
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/******************************************
+ * RESPONSIVE
+ ******************************************/
+@media (max-width: 768px) {
+  .datatable {
+    min-width: 500px;
+  }
+
+  .datatable-container {
+    padding: 10px;
+  }
+
+  .page-btn {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .datatable {
+    min-width: 420px;
+  }
+
+  .pagination-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
+  }
+}
+

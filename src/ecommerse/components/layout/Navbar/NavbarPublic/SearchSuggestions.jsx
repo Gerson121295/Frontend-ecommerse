@@ -12,7 +12,6 @@ export const SearchSuggestions = ({
   clearSearch, //funcion para limpiar la busqueda
 }) => {
 
-
   const safeResults = Array.isArray(results) ? results : [];
   if (!isFocused || safeResults.length === 0) return null;
 

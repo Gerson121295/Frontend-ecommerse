@@ -1,0 +1,177 @@
+
+/* Navbar Admin */
+.navbar-admin {
+  position: sticky;
+  top: 0;
+  height: 64px;
+  background: white;
+  z-index: 3000;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+}
+
+/* Botón Hamburguesa */
+.btn-menu {
+  background: transparent;
+  border: none;
+  color: #4a148c;
+  cursor: pointer;
+  /* margin-right: 10px; */
+}
+
+/* Asegurar 3 columnas */
+.navbar-layout {
+  display: grid !important;
+  grid-template-columns: 60px 1fr 60px;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* Área izquierda */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Área derecha */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Título centrado SIEMPRE */
+.navbar-title {
+  text-align: center;
+  color: #4a148c;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+}
+
+ .navbar-title2 {
+  text-align: left;
+  color: #4a148c;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  }
+
+/* Usuario */
+.navbar-user-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-user-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.navbar-user-wrapper:hover {
+  background: rgba(74, 20, 140, 0.1);
+}
+
+.navbar-user-icon {
+  color: #4a148c;
+  font-size: 1.8rem;
+}
+
+.navbar-user-name {
+  margin-left: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Dropdown */
+.navbar-dropdown {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 180px;
+  background: white;
+  padding: 8px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.12);
+  transform: scale(0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.navbar-dropdown.open {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Responsive *//* 
+@media (max-width: 768px) {
+  .navbar-title {
+    font-size: 1.1rem;
+  }
+
+  .navbar-user-name {
+    display: inline !important;
+    font-size: 14px;
+  }
+
+  .btn-menu {
+    margin-right: 0;
+  }
+
+   .navbar-admin.sidebar-open .navbar-title {
+    text-align: left;
+    justify-self: start; 
+    margin-left: 5px;
+    justify-self: start !important;
+  }
+
+  .navbar-layout {
+    grid-template-columns: 40px 1fr 60px;
+  }
+
+} */
+
+@media (max-width: 768px) {
+  .navbar-title {
+    font-size: 1.1rem;
+    display: none;
+  }
+
+  .navbar-user-name {
+    /* display: inline !important;
+    font-size: 14px; */
+     display: none;
+  }
+
+  .btn-menu {
+    margin-right: 0;
+  }
+
+   .navbar-admin.sidebar-open .navbar-title2 {
+    justify-self: start !important;
+    text-align: left;
+    margin-left: 8px;
+  }
+
+ /*  .navbar-layout {
+    grid-template-columns: 40px 1fr 60px;
+  } */
+
+}
+
+
+
+
+
+

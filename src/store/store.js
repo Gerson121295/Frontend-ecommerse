@@ -7,6 +7,7 @@ import { categoryModalSlice } from "./ui/categoryModalSlice";
 import { productModalSlice } from "./ui/productModalSlice";
 import { pedidoSlice } from "./pedido/pedidoSlice";
 import { cartSlice } from "./cart/cartSlice";
+import { userSlice } from "./user/userSlice";
 
 //Store es la fuente de la verdad(informacion) los componentes podran acceder
 
@@ -20,6 +21,7 @@ export const store = configureStore({
         productModal: productModalSlice.reducer,
         pedido: pedidoSlice.reducer,
         cart: cartSlice.reducer,
+        user: userSlice.reducer
     },
 
 })

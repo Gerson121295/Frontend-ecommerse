@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import './Home.css'
 import { NavbarApp } from "../../components/layout/Navbar/NavbarPublic";
 
-
 export const Home = () => {
 
   const dispatch = useDispatch();
@@ -13,8 +12,7 @@ export const Home = () => {
   //useProduct se le pasa el dispatch para poder usar las acciones de redux dentro del hook y asi manejar el estado global de los productos.
   const {startLoadingActiveProducts } = useProduct(dispatch);
   
-  const { isLoading, productSelected, products, 
-          currentPage, totalPages, totalElements, sizePagination, 
+  const { products, sizePagination, 
         } = useSelector((state) => state.product);
 
   //Carga los productos 1 vez para que la data se guarde en redux

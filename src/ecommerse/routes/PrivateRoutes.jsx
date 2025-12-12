@@ -23,10 +23,10 @@ export const PrivateRoutes = [
         path: "manage-categories",
         element: <ManageCategories />
     },
-    {
+  /*   { //Pagina de agregar producto - Se reemplazo por modal
         path: "add-product",
         element: <AddProduct />
-    },
+    }, */
     
     {
         path: "register-user",
