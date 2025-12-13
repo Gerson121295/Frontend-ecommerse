@@ -79,17 +79,18 @@ const initialState = {
                         return;
                     }
 
-                    const isPage = Array.isArray(payload.content);
+                    const isPage = Array.isArray(payload?.content);
                     const products = isPage ? payload.content : payload;
 
                     // fallback si products viene null o undefined
                     const safeProducts = Array.isArray(products) ? products : [];
-
+                    
                     state.products = safeProducts;
-                    state.currentPage = isPage ? payload.number : 0;
-                    state.totalPages = isPage ? payload.totalPages : 1;
-                    state.totalElements = isPage ? payload.totalElements : safeProducts.length;
-                    state.sizePagination = isPage ? payload.size : safeProducts.length;
+                    state.currentPage = isPage ? (payload.number ?? 0) : 0;
+                    state.totalPages = isPage ? (payload.totalPages ?? 1) : 1;
+                    state.totalElements = isPage ? (payload.totalElements ?? safeProducts.length) : safeProducts.length;
+                    // never allow sizePagination to become 0
+                    state.sizePagination = isPage ? (payload.size > 0 ? payload.size : 10) : (safeProducts.length > 0 ? safeProducts.length : 10);
                     state.isLoading = false;
             },
 

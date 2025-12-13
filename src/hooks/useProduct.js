@@ -27,6 +27,22 @@ export const useProduct = () => {
     //hook to access product state from Redux store
     const { products, productSelected, isLoading, errorMessage, currentPage, totalPages, totalElements, sizePagination } = useSelector(state => state.product); 
 
+
+    const normalizeAndFormat = (data) => {
+      if (!data) return null;
+      // Si viene Page (tiene content) -> formatear content
+      if (Array.isArray(data.content)) {
+        const formattedContent = data.content.map(p => ({ ...p, fechaCreacion: formatDate(p.fechaCreacion) }));
+        return { ...data, content: formattedContent };
+      }
+      // Si viene lista simple: formatear elementos
+      if (Array.isArray(data)) {
+        const formatted = data.map(p => ({ ...p, fechaCreacion: formatDate(p.fechaCreacion) }));
+        return formatted;
+      }
+      return data;
+    };
+
     //establecer producto seleccionado
     const setProductSelected = (product) => {
       dispatch(onSetProductSelected(product));
@@ -228,28 +244,34 @@ export const useProduct = () => {
   };
 
   // Listar productos activos
-  const startLoadingActiveProducts = async (page = 0, size = sizePagination || 10) => {
+  const startLoadingActiveProducts = async (page = 0, size = sizePagination) => {
     dispatch(onSetLoading(true));
+    const safeSize = (!size || size <= 0) ? 10 : size;
+
     try {
       //const {data} = await ecommerceApi.get(`/productos/listarActivos?page=${page}&size=${size}`); 
       const { data } = await ecommerseApi.get('/productos/listarActivos', {
-        params: { page, size},
+        params: { page, size: safeSize },
       });
 
          //Formatear las fechas de creación antes de guardar
-        const formattedData = {
+/*         const formattedData = {
           ...data, //pasa toda la data de producto(una copia)
            //Modifica el content
           content: data.content.map(product => ({ //accede a la data y recorre cada uno
           ...product, //esparce toda los campos de productos
           fechaCreacion: formatDate(product.fechaCreacion), //modifica el campo fechaCreacion
           })),
-        };
-
+        }; 
         dispatch(onLoadProducts(formattedData));
+*/
 
+      const normalized = normalizeAndFormat(data);
+      dispatch(onLoadProducts(normalized));
+        
       //return data; //true
     } catch (error) {
+        console.error('startLoadingActiveProducts', error);
         const message = error.response?.data?.error || 'Error al listar productos activos';
         dispatch(onError(message));
         //return []; //false;
@@ -325,16 +347,30 @@ export const useProduct = () => {
   //Obtener producto por nombre
   const startGetProductByName = async (nombre) => {
     dispatch(onSetLoading(true));
+    
+    if (!nombre || !nombre.trim()) {
+      dispatch(onLoadProducts(null)); // limpia
+      return [];
+    }
+
     try {
+      // backend puede devolver Page o List, no asumimos
       const { data } = await ecommerseApi.get(
         `/productos/buscar/nombre?nombre=${nombre}`
         //`/productos/buscar/nombre`,{ params: { nombre, page: 0, size: 10 }}
       );
-      //console.log(data);
+
       //dispatch(onSetProductSelected(data));
-      dispatch(onLoadProducts(data)); //Guarda la data 
-      return data.content;  //return data.content; // devolvemos solo la lista.  //return true; 
+      //dispatch(onLoadProducts(data)); //Guarda la data 
+      //return data.content;  //return data.content; // devolvemos solo la lista.  //return true; 
+      
+      const normalized = normalizeAndFormat(data);
+      dispatch(onLoadProducts(normalized));
+      // devolvemos siempre array de items (si page -> content, si list -> list)
+      return Array.isArray(normalized) ? normalized : (Array.isArray(normalized?.content) ? normalized.content : []);
+    
     } catch (error) {
+      console.error('startGetProductByName', error);
       const message = error.response?.data?.error || 'Error al obtener producto por nombre';
       dispatch(onError(message));
       return [];    //return false; //return []; //devuelve array vacio

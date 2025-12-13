@@ -1,38 +1,42 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Footer, ProductCard } from "../../components/layout";
-import { useProduct } from "../../../hooks/useProduct";
-import { useEffect } from "react";
-import './Home.css'
-import { NavbarApp } from "../../components/layout/Navbar/NavbarPublic";
+// pages/Home.jsx
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useProduct } from '../../../hooks/useProduct';
+import { useNavbarSearch } from '../../../hooks/useNavbarSearch';
+import { NavbarApp } from '../../components/layout/Navbar/NavbarPublic/NavbarApp';
+import { Footer } from '../../components/layout/Footer';
+import { ProductCard } from '../../components/layout/ProductCard';
 
 export const Home = () => {
-
   const dispatch = useDispatch();
+  const { startLoadingActiveProducts } = useProduct();
+  const { searchText } = useNavbarSearch(); // nos subscribimos al texto de búsqueda
+  const { products, sizePagination } = useSelector(state => state.product);
 
-  //useProduct se le pasa el dispatch para poder usar las acciones de redux dentro del hook y asi manejar el estado global de los productos.
-  const {startLoadingActiveProducts } = useProduct(dispatch);
-  
-  const { products, sizePagination, 
-        } = useSelector((state) => state.product);
-
-  //Carga los productos 1 vez para que la data se guarde en redux
+  // carga inicial
   useEffect(() => {
-    startLoadingActiveProducts(0, sizePagination); //carga inicial
+    startLoadingActiveProducts(0, sizePagination || 10);
   }, []);
 
-   // Cambiar cantidad a mostrar
+  // si el usuario borra el texto en el navbar -> recarga productos
+  useEffect(() => {
+    if ((searchText || '').trim() === '') {
+      startLoadingActiveProducts(0, sizePagination || 10);
+    }
+  }, [searchText]);
+
   const handleSizeChange = (e) => {
-    const newSize = Number(e.target.value);
+    const newSize = Number(e.target.value) || 10;
     startLoadingActiveProducts(0, newSize);
   };
 
   return (
     <>
-          <NavbarApp/>
+      <NavbarApp />
+      <div className="home-wrapper">
 
-     <div className="home-wrapper">
-
-      {/* HERO RESPONSIVO */}
+              {/* HERO RESPONSIVO */}
         <section className="hero-full">
           <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel">
 
@@ -62,14 +66,11 @@ export const Home = () => {
 
           </div>
         </section>
-
-         {/* CONTENIDO */}
+        
+        {/* ... Contenido ... */}
         <section className="container mt-4">
-
-          {/* TÍTULO + SELECT RESPONSIVO */}
           <div className="home-header-flex">
             <h3 className="section-title">Artículos más vendidos</h3>
-
             <select
               className="form-select shadow-sm selector-modern"
               style={{ width: "150px" }}
@@ -82,18 +83,15 @@ export const Home = () => {
             </select>
           </div>
 
-          {/* GRID DE PRODUCTOS */}
           <div className="row justify-content-center g-4 mt-3">
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {Array.isArray(products) && products.length > 0
+              ? products.map(product => <ProductCard key={product.id} product={product} />)
+              : <div className="text-center">No hay productos</div>
+            }
           </div>
-
         </section>
-
       </div>
       <Footer />
     </>
   );
 };
-
