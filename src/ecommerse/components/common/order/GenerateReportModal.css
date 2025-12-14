@@ -1,0 +1,78 @@
+
+/* ===== Modal Generar Reporte ===== */
+
+.reporte-form {
+  padding: 1.25rem;
+}
+
+.reporte-form label {
+  font-weight: 600;
+  color: #6c3483;
+  margin-bottom: 4px;
+}
+
+/* Inputs */
+/* Evita que el campo crezca al hacer focus */
+.reporte-form input[type="date"] {
+  border-radius: 10px;
+  border: 1.5px solid #6c3483;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.reporte-form input[type="date"]:focus {
+  outline: none;
+  border-color: #6c3483;
+  /*box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25);*/ /* AGRANDA EL CAMPO */
+  box-shadow: none !important;
+}
+
+/* Toggle TODOS / PAGADOS */
+.toggle-pedidos {
+  display: flex;
+  border: 1px solid #6c3483;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.toggle-pedidos button {
+  flex: 1;
+  padding: 10px;
+  font-weight: 600;
+  border: none;
+  background: white;
+  color: #6c3483;
+  transition: all 0.25s ease;
+}
+
+.toggle-pedidos button.active {
+  background-color: #6c3483;
+  color: white;
+}
+
+.toggle-pedidos button:hover {
+  background-color: rgba(108, 52, 131, 0.1);
+}
+
+/* Footer */
+.reporte-footer {
+  display: flex;
+  justify-content: center; 
+  gap: 14px;
+  margin-top: 1.8rem;
+  flex-wrap: wrap;
+}
+
+
+/* Responsive */
+@media (max-width: 480px) {
+  .reporte-footer {
+    flex-direction: column;
+  }
+
+  .reporte-footer button {
+    width: 100%;
+  }
+}
+

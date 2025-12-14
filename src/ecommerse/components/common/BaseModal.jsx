@@ -49,7 +49,7 @@ const customStyles = {
   },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.55)',
-    zIndex: 1350,
+    zIndex: 3100,
     backdropFilter: 'blur(3px)', //Funcion de opacar la pantalla para que resalte el modal
   }
 };
@@ -90,43 +90,7 @@ export const BaseModal = ({
     onClose(); 
   };
 
-  // Permite que el hijo (AddProductModal) use handleClose
- /*  return (
-    <ReactModal
-      isOpen={isOpen}
-      onRequestClose={handleClose}
-      style={customStyles}
-      closeTimeoutMS={200}
-    >
-  
-      <div  //Titulo Header fijo 
-        style={{
-          position: 'sticky',
-          top: 0,
-          background: '#fff',
-          padding: '10px 10px', //'15px 20px',
-          borderBottom: '1px solid #e5e5e5',
-          zIndex: 10
-        }}
-      >
-        <h4 className="m-0">{title}</h4>
-      </div>
-
-      <div  //Contenido Scrolleable 
-        style={{
-          overflowY: 'auto',
-          padding: '10px',
-          //maxHeight: 'calc(80vh - 70px)' // header fijo resta altura
-          maxHeight: 'calc(95vh - 10px)' 
-        }}
-      >
-        {
-        children(handleClose) //{children} ← pasamos handleClose como función al hijo
-        } 
-      </div>
-    </ReactModal>
-  ); */
-
+ 
   //Version modal usa estilos CSS Responsive
  return (
     <ReactModal

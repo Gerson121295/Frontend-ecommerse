@@ -52,6 +52,7 @@ const TableToolbar = ({
   onAddClick,
   buttonLabel = "Agregar nuevo",
   showExport = true,
+  onExportClick
 }) => {
   return (
     <div className="d-flex align-items-center mb-3 flex-wrap justify-content-between">
@@ -61,7 +62,15 @@ const TableToolbar = ({
       </div>
 
       <div className="d-flex gap-2 mt-2 mt-md-0">
-        {showExport && <button className="btn btn-blanco-morado">Exportar</button>}
+        {showExport && (
+          <button
+            className="btn btn-blanco-morado"
+            onClick={onExportClick}
+          >
+            Exportar
+          </button>
+        )}
+
         {onAddClick && (
           <button 
             className="btn btn-morado"

@@ -40,5 +40,19 @@ export const pedidoService = {
   // Eliminar pedido
   eliminarPedido: async (id) => {
     return await ecommerseApi.delete(`/pedidos/${id}`);
-  }
+  },
+
+  //Obtener reporte de pedidos en pdf
+  exportarReportePedidos : async ({ fechaInicio, fechaFin, soloPagados }) => {
+  return await ecommerseApi.get("/pedidos/reportes/pdf-letter", {
+    params: {
+      fechaInicio,
+      fechaFin,
+      soloPagados
+    },
+    responseType: "blob", //IMPORTANTE para PDF
+  });
+},
+
+
 };

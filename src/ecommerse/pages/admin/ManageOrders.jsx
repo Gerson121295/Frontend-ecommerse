@@ -3,9 +3,10 @@
 import TableToolbar from "../../components/common/TableToolbar";
 import DataTable from "../../components/common/DataTable";
 import { usePedido } from "../../../hooks/usePedido";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DeleteOrderButton } from "../../components/common/order/DeleteOrderButton";
 import { AdminSearchBar } from "../../components/common/search/AdminSearchBar";
+import { GenerateReporteModal } from "../../components/common/order/GenerateReportModal";
 
 export const ManageOrders = () => {
 
@@ -22,6 +23,8 @@ export const ManageOrders = () => {
         startLoadingOrders, setOrderSelected, //clearOrderSelected, 
         startSearchingByTrackingNumber, startSearchingByUser
   } = usePedido();
+
+  const [isReporteModalOpen, setReporteModalOpen] = useState(false);
 
   //Cargar los pedidos
   useEffect(() => {
@@ -99,12 +102,15 @@ export const ManageOrders = () => {
 
   return (
     <div className="container-fluid px-4 py-4">
-   {/*    <TableToolbar 
-        placeholder="Buscar Pedido"
-        //onSearchChange={onSelect} //enviar funcion de busqueda de pedido
-      /> */}
+
+      <GenerateReporteModal
+        isOpen={isReporteModalOpen}
+        onClose={() => setReporteModalOpen(false)}
+      />
 
       <TableToolbar 
+        showExport={true}
+        onExportClick={() => setReporteModalOpen(true)}
         placeholder="Buscar pedido..."
         customSearch={(
           <AdminSearchBar

@@ -1,7 +1,7 @@
 
 
 import Swal from 'sweetalert2';
-
+import '../styles.css'
 /**
  * Muestra una notificación reutilizable con SweetAlert2
  *

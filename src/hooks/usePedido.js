@@ -257,6 +257,50 @@ export const usePedido = () => {
         }
     }
 
+    //Generar reporte de pedido
+    const startExportPedidosReporte = async ({
+            fechaInicio,
+            fechaFin,
+            soloPagados,
+            }) => {
+        try {
+            const { data } = await pedidoService.exportarReportePedidos({
+            fechaInicio,
+            fechaFin,
+            soloPagados,
+            });
+
+            const blob = new Blob([data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "reporte_pedidos.pdf";
+            document.body.appendChild(link);
+            link.click();
+
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            const message =
+            error.response?.data?.error ||
+            "No hay pedidos realizados en ese rango de fechas";
+            //Swal.fire("Error", message, "error");
+
+            showNotification(
+                'error',
+                'Error al generar el reporte',
+                message,
+                {
+                    timer: 2500,
+                    onClose: () => startLoadingOrders(pageNumber),
+                    customClass: 'toast-dark',
+                }                
+            ) 
+        }
+        };
+
+
    //Limpiar producto Seleccionado
      const clearOrderSelected = () => {
        dispatch(onClearOrderSelected());
@@ -287,6 +331,8 @@ export const usePedido = () => {
         startSearchingByTrackingNumber,
         startSearchOrderById,
         startDeletingOrder,
+
+        startExportPedidosReporte,
 
         clearOrderSelected,
         clearOrderError
